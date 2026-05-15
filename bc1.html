@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一年级华文：海底捕鱼学量词（四人竞技版）</title>
+    <style>
+        :root {
+            --water-deep: #002b4e;
+            --water-light: #000428;
+            --p1-color: #ff4757; /* 红 */
+            --p2-color: #2ed573; /* 绿 */
+            --p3-color: #1e90ff; /* 蓝 */
+            --p4-color: #ffa502; /* 橙 */
+            --gold: #f1c40f;
+        }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            overflow: hidden; 
+            font-family: 'KaiTi', 'STKaiti', '楷体', '华文楷体', serif;
+            background: linear-gradient(to bottom, var(--water-deep), var(--water-light));
+            user-select: none;
+        }
+
+        #bg-canvas {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1; pointer-events: none;
+        }
+
+        /* 配置界面 */
+        #config-screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9); z-index: 1000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: white; backdrop-filter: blur(10px);
+        }
+
+        .config-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px; margin-bottom: 20px;
+            max-width: 900px;
+        }
+
+        .team-box { 
+            background: rgba(255, 255, 255, 0.05); padding: 15px; 
+            border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 320px;
+        }
+
+        .num-grid {
+            display: grid; grid-template-columns: repeat(10, 1fr);
+            gap: 3px; margin-top: 8px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 5px;
+        }
+        .num-dot {
+            background: white; color: black; border: none; font-size: 11px;
+            padding: 3px 0; border-radius: 3px; cursor: pointer;
+            font-family: inherit;
+        }
+        .num-dot.absent { background: #555; color: #999; text-decoration: line-through; }
+
+        /* 游戏主界面：修改为横向 4 列布局 */
+        #main-game { 
+            display: none; 
+            width: 100%; height: 100%; 
+            grid-template-columns: repeat(4, 1fr);
+            position: relative; z-index: 10; 
+        }
+
+        .column { 
+            position: relative; overflow: hidden; 
+            border-right: 1px solid rgba(255,255,255,0.1); 
+            transition: background 0.3s; 
+            padding-top: 140px; /* 为顶部置顶分数留出空间 */
+        }
+        .column:last-child { border-right: none; }
+
+        /* 控制栏调整到中间底部或侧边，避免遮挡顶部置顶分数 */
+        .top-ctrls {
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+            display: flex; align-items: center; gap: 15px; z-index: 150;
+        }
+
+        #timer-box {
+            background: rgba(0, 0, 0, 0.8); color: var(--gold);
+            padding: 5px 15px; border-radius: 30px; font-size: 20px; font-weight: bold;
+            border: 2px solid var(--gold);
+        }
+
+        .quiet-btn {
+            background: #2c3e50; color: white; border: 1px solid #ecf0f1;
+            padding: 5px 15px; border-radius: 30px; cursor: pointer;
+            font-size: 14px; font-family: inherit;
+        }
+
+        /* 纪律锁定层 */
+        .discipline-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 210;
+        }
+        .discipline-text { font-size: 24px; color: white; margin-bottom: 10px; }
+        .discipline-timer { font-size: 40px; color: var(--gold); font-weight: bold; }
+
+        /* UI 面板 - 修改为置顶布局 */
+        .ui-panel {
+            position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+            display: flex; flex-direction: column; align-items: center; gap: 5px;
+            width: 90%; z-index: 100;
+        }
+
+        .mgmt-btn {
+            background: rgba(255, 71, 87, 0.8); color: white; border: none;
+            padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 10px;
+            font-weight: bold; font-family: inherit; white-space: nowrap;
+        }
+
+        .score-card {
+            background: rgba(0, 0, 0, 0.7); width: 100%;
+            padding: 10px 8px; border-radius: 12px; text-align: center;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .team-title { font-size: 16px; margin-bottom: 2px; font-weight: bold; overflow: hidden; text-overflow: ellipsis; }
+        .score-num { font-size: 36px; font-weight: bold; color: var(--gold); line-height: 1; margin: 5px 0; }
+
+        .lives-container { display: flex; justify-content: center; gap: 2px; margin-top: 4px; }
+        .heart { color: #ff4757; font-size: 14px; }
+        .heart.empty { color: #444; filter: grayscale(1); opacity: 0.5; }
+
+        .current-student { 
+            font-size: 14px; color: #00ffff; margin-top: 5px; 
+            font-weight: bold; text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+            background: rgba(0,255,255,0.1); padding: 2px 6px; border-radius: 4px;
+        }
+
+        /* 换人覆盖层 */
+        .switch-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 0, 0, 0.2);
+            display: none; align-items: center; justify-content: center;
+            z-index: 200; pointer-events: none;
+        }
+        .switch-text { font-size: 30px; font-weight: bold; color: white; text-shadow: 0 0 10px red; }
+
+        /* 鱼和炸弹 - 尺寸 */
+        .fish, .bomb {
+            position: absolute; width: 80px; height: 50px;
+            cursor: pointer; z-index: 50;
+        }
+        .fish-label {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            color: white; font-weight: bold; font-size: 14px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+            pointer-events: none; z-index: 10;
+            white-space: nowrap;
+        }
+
+        /* 动画 */
+        @keyframes floatUp {
+            from { transform: translateY(110vh); opacity: 0.3; }
+            to { transform: translateY(-10vh); opacity: 0; }
+        }
+        .bubble {
+            position: absolute; background: rgba(255, 255, 255, 0.2); border-radius: 50%;
+            pointer-events: none; animation: floatUp linear infinite;
+        }
+
+        #quiet-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 2000; cursor: pointer;
+        }
+
+        #result-screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 3000;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            color: white; text-align: center;
+        }
+
+        .winner-text { font-size: 50px; color: var(--gold); margin-bottom: 20px; }
+
+        .pop-txt {
+            position: absolute; font-weight: bold; font-size: 20px; pointer-events: none;
+            animation: fadeUp 0.8s forwards; z-index: 250;
+        }
+        @keyframes fadeUp {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-40px); }
+        }
+        
+        .hit-shake { animation: shake 0.1s 3; }
+        @keyframes shake {
+            0%, 100% { transform: translate(0,0); }
+            25% { transform: translate(-5px,0); }
+            75% { transform: translate(5px,0); }
+        }
+    </style>
+</head>
+<body>
+
+<div id="bg-canvas"></div>
+
+<!-- 配置界面 -->
+<div id="config-screen">
+    <h1 style="font-size: 32px; color: var(--gold); margin-bottom: 20px;">海底捕鱼：量词“片”四人大PK</h1>
+    <div class="config-grid">
+        <div class="team-box">
+            <h3 style="color: var(--p1-color); margin:0 0 10px 0;">P1 (第一列)</h3>
+            <input type="text" id="name-p1" value="红队" style="width:100%; padding:5px; border-radius:4px; border:none;">
+            <div style="font-size:12px; margin-top:5px;">人数：<input type="number" id="count-p1" value="25" onchange="renderDots('p1')" style="width:40px;"></div>
+            <div id="grid-p1" class="num-grid"></div>
+        </div>
+        <div class="team-box">
+            <h3 style="color: var(--p2-color); margin:0 0 10px 0;">P2 (第二列)</h3>
+            <input type="text" id="name-p2" value="绿队" style="width:100%; padding:5px; border-radius:4px; border:none;">
+            <div style="font-size:12px; margin-top:5px;">人数：<input type="number" id="count-p2" value="25" onchange="renderDots('p2')" style="width:40px;"></div>
+            <div id="grid-p2" class="num-grid"></div>
+        </div>
+        <div class="team-box">
+            <h3 style="color: var(--p3-color); margin:0 0 10px 0;">P3 (第三列)</h3>
+            <input type="text" id="name-p3" value="蓝队" style="width:100%; padding:5px; border-radius:4px; border:none;">
+            <div style="font-size:12px; margin-top:5px;">人数：<input type="number" id="count-p3" value="25" onchange="renderDots('p3')" style="width:40px;"></div>
+            <div id="grid-p3" class="num-grid"></div>
+        </div>
+        <div class="team-box">
+            <h3 style="color: var(--p4-color); margin:0 0 10px 0;">P4 (第四列)</h3>
+            <input type="text" id="name-p4" value="橙队" style="width:100%; padding:5px; border-radius:4px; border:none;">
+            <div style="font-size:12px; margin-top:5px;">人数：<input type="number" id="count-p4" value="25" onchange="renderDots('p4')" style="width:40px;"></div>
+            <div id="grid-p4" class="num-grid"></div>
+        </div>
+    </div>
+    <div style="margin-bottom: 20px;">
+        游戏时长：<input type="number" id="game-time" value="3" style="width:50px;"> 分钟
+    </div>
+    <button onclick="startGame()" style="padding: 12px 60px; font-size: 20px; background: var(--gold); border: none; border-radius: 50px; cursor: pointer; font-weight: bold;">进入海底世界</button>
+</div>
+
+<!-- 游戏主界面 -->
+<div id="main-game">
+    <!-- 顶部控制栏移动到底部，确保顶部只有分数 -->
+    <div class="top-ctrls">
+        <button class="quiet-btn" onclick="toggleSilence(true)">全场安静 🤫</button>
+        <div id="timer-box">03:00</div>
+    </div>
+
+    <div id="quiet-overlay" onclick="toggleSilence(false)">
+        <div style="font-size:100px;">🤫</div>
+        <h2 style="color:white; font-size:40px;">保持安静，休息片刻</h2>
+        <p style="color:#aaa;">点击任何地方继续</p>
+    </div>
+
+    <div id="col-p1" class="column"></div>
+    <div id="col-p2" class="column"></div>
+    <div id="col-p3" class="column"></div>
+    <div id="col-p4" class="column"></div>
+</div>
+
+<!-- 结算界面 -->
+<div id="result-screen">
+    <div class="winner-text" id="win-msg">比赛结束！</div>
+    <div id="final-stats" style="font-size: 24px; margin-bottom: 30px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;"></div>
+    <button onclick="location.reload()" style="padding: 10px 40px; font-size: 18px; background: var(--gold); border: none; border-radius: 10px; cursor: pointer; font-weight: bold;">回到码头</button>
+</div>
+
+<script>
+    const dictionary = {
+        correct: ["叶子", "树叶", "面包", "草地", "花瓣", "饼干", "空地", "玻璃", "云朵", "雪花", "纸片", "药片", "肉片", "心意"],
+        wrong: ["小鱼", "大象", "老师", "雨伞", "书本", "苹果", "小猫", "铅笔", "书包", "衬衫", "大树", "山坡", "牛", "蛇", "电灯"]
+    };
+
+    const players = ['p1', 'p2', 'p3', 'p4'];
+    let state = {
+        p1: { score: 0, lives: 3, students: [], name: "", isDisciplined: false, color: '#ff4757' },
+        p2: { score: 0, lives: 3, students: [], name: "", isDisciplined: false, color: '#2ed573' },
+        p3: { score: 0, lives: 3, students: [], name: "", isDisciplined: false, color: '#1e90ff' },
+        p4: { score: 0, lives: 3, students: [], name: "", isDisciplined: false, color: '#ffa502' },
+        timeRemaining: 180,
+        gameActive: false,
+        isPaused: false
+    };
+
+    function renderDots(p) {
+        const count = parseInt(document.getElementById('count-' + p).value) || 0;
+        const grid = document.getElementById('grid-' + p);
+        grid.innerHTML = '';
+        for(let i=1; i<=count; i++) {
+            const b = document.createElement('button');
+            b.className = 'num-dot';
+            b.innerText = i;
+            b.onclick = (e) => { e.stopPropagation(); b.classList.toggle('absent'); };
+            grid.appendChild(b);
+        }
+    }
+    players.forEach(p => renderDots(p));
+
+    function createUI(p) {
+        const col = document.getElementById('col-' + p);
+        col.innerHTML = `
+            <div class="discipline-overlay" id="discipline-${p}">
+                <div class="discipline-text">安静中</div>
+                <div class="discipline-timer" id="timer-${p}">5</div>
+            </div>
+            <div class="switch-overlay" id="overlay-${p}">
+                <div class="switch-text">请换人</div>
+            </div>
+            <div class="ui-panel">
+                <div class="score-card" onclick="pickStudent('${p}')">
+                    <div class="team-title" style="color:${state[p].color}">${state[p].name}</div>
+                    <div class="score-num" id="score-${p}">0</div>
+                    <div class="lives-container" id="lives-${p}"></div>
+                    <div class="current-student" id="stu-${p}">点此点名</div>
+                </div>
+                <button class="mgmt-btn" onclick="adjustScore('${p}', -5)">纪律 -5</button>
+            </div>
+        `;
+    }
+
+    function initBubbles() {
+        const bg = document.getElementById('bg-canvas');
+        for(let i=0; i<30; i++) {
+            const b = document.createElement('div');
+            b.className = 'bubble';
+            const size = Math.random() * 20 + 10;
+            b.style.width = b.style.height = size + 'px';
+            b.style.left = Math.random() * 100 + 'vw';
+            b.style.animationDuration = (Math.random() * 5 + 5) + 's';
+            b.style.bottom = "-50px";
+            bg.appendChild(b);
+        }
+    }
+
+    function startGame() {
+        players.forEach(p => {
+            state[p].name = document.getElementById('name-' + p).value;
+            state[p].students = [...document.querySelectorAll(`#grid-${p} .num-dot:not(.absent)`)].map(e => e.innerText);
+            createUI(p);
+            updateLives(p);
+        });
+
+        state.timeRemaining = (parseInt(document.getElementById('game-time').value) || 3) * 60;
+        document.getElementById('config-screen').style.display = 'none';
+        document.getElementById('main-game').style.display = 'grid';
+        
+        state.gameActive = true;
+        initBubbles();
+        startTimer();
+
+        players.forEach(p => {
+            setInterval(() => { if(shouldSpawn(p)) spawnItem(p) }, 1400);
+        });
+    }
+
+    function shouldSpawn(p) {
+        return state.gameActive && !state.isPaused && !state[p].isDisciplined && state[p].lives > 0;
+    }
+
+    function toggleSilence(s) {
+        state.isPaused = s;
+        document.getElementById('quiet-overlay').style.display = s ? 'flex' : 'none';
+    }
+
+    function startTimer() {
+        const timerEl = document.getElementById('timer-box');
+        const clock = setInterval(() => {
+            if(!state.gameActive || state.isPaused) return;
+            state.timeRemaining--;
+            const m = Math.floor(state.timeRemaining / 60);
+            const s = state.timeRemaining % 60;
+            timerEl.innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            if(state.timeRemaining <= 0) { clearInterval(clock); endGame(); }
+        }, 1000);
+    }
+
+    function pickStudent(p) {
+        if(state.isPaused || state[p].isDisciplined) return;
+        const list = state[p].students;
+        if(!list.length) return;
+        
+        const stuEl = document.getElementById('stu-' + p);
+        document.getElementById('overlay-' + p).style.display = 'none';
+        
+        let count = 0;
+        const roll = setInterval(() => {
+            stuEl.innerText = "?" + list[Math.floor(Math.random() * list.length)];
+            if(++count > 10) {
+                clearInterval(roll);
+                stuEl.innerText = list[Math.floor(Math.random() * list.length)] + " 号";
+                state[p].lives = 3;
+                updateLives(p);
+            }
+        }, 40);
+    }
+
+    function updateLives(p) {
+        const container = document.getElementById('lives-' + p);
+        if(!container) return;
+        container.innerHTML = '';
+        for(let i=0; i<3; i++) {
+            const h = document.createElement('span');
+            h.className = i < state[p].lives ? 'heart' : 'heart empty';
+            h.innerText = '❤';
+            container.appendChild(h);
+        }
+    }
+
+    function spawnItem(p) {
+        const col = document.getElementById('col-' + p);
+        const isBomb = Math.random() < 0.12;
+        const item = document.createElement('div');
+        item.className = isBomb ? 'bomb' : 'fish';
+        
+        const isCorrect = !isBomb && Math.random() > 0.4;
+        const word = isBomb ? "" : (isCorrect ? 
+            dictionary.correct[Math.floor(Math.random() * dictionary.correct.length)] : 
+            dictionary.wrong[Math.floor(Math.random() * dictionary.wrong.length)]);
+
+        const side = Math.random() > 0.5 ? 'left' : 'right';
+        const color = state[p].color;
+
+        if(isBomb) {
+            item.innerHTML = `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="35" fill="#333"/><circle cx="50" cy="50" r="10" fill="red"><animate attributeName="opacity" values="0;1;0" dur="0.5s" repeatCount="indefinite"/></circle></svg>`;
+        } else {
+            item.innerHTML = `
+                <svg viewBox="0 0 200 100" style="${side==='right'?'transform:scaleX(-1)':''}">
+                    <path d="M20,50 Q20,20 80,10 T150,40 C170,30 190,20 200,50 C190,80 170,70 150,60 Q80,90 20,50" fill="${color}" />
+                    <circle cx="160" cy="40" r="5" fill="white" /><circle cx="160" cy="40" r="2" fill="black" />
+                </svg>
+                <div class="fish-label">${word}</div>`;
+        }
+
+        // 调整随机生成的范围，避开顶部的 UI
+        item.style.top = (Math.random() * 60 + 25) + '%';
+        let pos = side === 'left' ? -90 : col.offsetWidth;
+        item.style.left = pos + 'px';
+        col.appendChild(item);
+
+        const speed = 1.5 + Math.random() * 1.5;
+        const move = () => {
+            if(!state.gameActive || !item.parentNode) return;
+            if(!state.isPaused && !state[p].isDisciplined) {
+                pos += (side === 'left' ? speed : -speed);
+                item.style.left = pos + 'px';
+            }
+            if(pos > col.offsetWidth + 100 || pos < -100) item.remove();
+            else requestAnimationFrame(move);
+        };
+        requestAnimationFrame(move);
+
+        item.onmousedown = (e) => {
+            e.preventDefault();
+            if(!state.gameActive || state.isPaused || state[p].isDisciplined || state[p].lives <= 0) return;
+            
+            if(isBomb) {
+                onHit(p, -10, true, item);
+            } else if(isCorrect) {
+                onHit(p, 10, false, item);
+            } else {
+                onHit(p, -5, true, item);
+            }
+            item.remove();
+        };
+    }
+
+    function onHit(p, pts, isBad, el) {
+        state[p].score = Math.max(0, state[p].score + pts);
+        document.getElementById('score-' + p).innerText = state[p].score;
+        showPop(p, pts > 0 ? `+${pts}` : pts, el.offsetLeft, el.offsetTop, pts > 0 ? '#00ff00' : '#ff4757');
+
+        if(isBad) {
+            state[p].lives--;
+            updateLives(p);
+            const col = document.getElementById('col-' + p);
+            col.classList.add('hit-shake');
+            setTimeout(() => col.classList.remove('hit-shake'), 300);
+            if(state[p].lives <= 0) triggerSwitch(p);
+        }
+    }
+
+    function triggerSwitch(p) {
+        document.getElementById('overlay-' + p).style.display = 'flex';
+        document.getElementById('stu-' + p).innerText = "❌ 换人";
+        document.getElementById('col-' + p).querySelectorAll('.fish, .bomb').forEach(f => f.remove());
+    }
+
+    function adjustScore(p, amt) {
+        state[p].score = Math.max(0, state[p].score + amt);
+        document.getElementById('score-' + p).innerText = state[p].score;
+        
+        state[p].isDisciplined = true;
+        const ov = document.getElementById('discipline-' + p);
+        const timer = document.getElementById('timer-' + p);
+        ov.style.display = 'flex';
+        
+        let sec = 5;
+        timer.innerText = sec;
+        const itv = setInterval(() => {
+            if(--sec <= 0) {
+                clearInterval(itv);
+                state[p].isDisciplined = false;
+                ov.style.display = 'none';
+            }
+            timer.innerText = sec;
+        }, 1000);
+    }
+
+    function showPop(p, txt, x, y, color) {
+        const pop = document.createElement('div');
+        pop.className = 'pop-txt';
+        pop.innerText = txt;
+        pop.style.color = color;
+        pop.style.left = x + 'px';
+        pop.style.top = y + 'px';
+        document.getElementById('col-' + p).appendChild(pop);
+        setTimeout(() => pop.remove(), 800);
+    }
+
+    function endGame() {
+        state.gameActive = false;
+        const res = document.getElementById('result-screen');
+        const stats = document.getElementById('final-stats');
+        res.style.display = 'flex';
+        
+        const sorted = players.slice().sort((a,b) => state[b].score - state[a].score);
+        const winner = sorted[0];
+        
+        document.getElementById('win-msg').innerText = `🏆 ${state[winner].name} 胜出！`;
+        
+        stats.innerHTML = players.map(p => `
+            <div style="color:${state[p].color}">
+                ${state[p].name}<br/>
+                <span style="font-size:32px; color:white">${state[p].score}</span>
+            </div>
+        `).join('');
+    }
+</script>
+</body>
+</html>
