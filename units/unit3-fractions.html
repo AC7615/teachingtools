@@ -444,7 +444,7 @@ async function saveResult(result,statusId){
   if(!SHEETS_API_URL){status.textContent="Google Sheet 尚未连接：成绩暂未上传";return}
   status.textContent="正在保存成绩……";
   try{
-    const data=await postApi({...result,action:"save",sessionToken});
+    const data=await postApi({...result,unit:"单元3：分数",action:"save",sessionToken});
     if(data.error){status.textContent=data.error==="session_invalid"?"登录已过期，请重新登录":"成绩保存失败，请稍后重试";return}
     status.textContent=data.saved?"✅ 已更新最高成绩":"成绩已收到；最高分保持不变";
   }catch(error){status.textContent="暂时无法保存，请检查网络后重试"}
@@ -462,7 +462,7 @@ async function loadLeaderboard(){
   if(isAnonymous()){[gameStatus,ticketStatus].forEach(el=>el.textContent="请先使用班级代码登录。");return}
   if(!SHEETS_API_URL){[gameStatus,ticketStatus].forEach(el=>el.textContent="尚未连接 Google Sheet。");return}
   try{
-    const data=await postApi({action:"leaderboard",sessionToken});
+    const data=await postApi({action:"leaderboard",unit:"单元3：分数",sessionToken});
     if(data.error)throw new Error(data.error);
     const gameRows=data.gameLeaderboard||data.leaderboard||[],ticketRows=data.ticketLeaderboard||[];
     const medal=i=>["🥇","🥈","🥉"][i]||i+1;
