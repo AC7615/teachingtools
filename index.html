@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>一年级数学互动学习</title>
+<style>
+:root{--ink:#24324a;--muted:#6d7484;--purple:#6f74ef;--green:#57b777;--line:#e9e5dc;--shadow:0 14px 35px rgba(54,62,92,.12)}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;background:linear-gradient(150deg,#fff4e6,#f7f8ff 55%,#edfbf3)}
+.app{width:min(1040px,100%);margin:auto;padding:28px 18px 48px}.hero{background:#fff;border:1px solid var(--line);border-radius:28px;padding:clamp(24px,6vw,48px);box-shadow:var(--shadow);display:grid;grid-template-columns:1.45fr .55fr;gap:20px;align-items:center}
+.eyebrow{font-weight:900;color:var(--green)}h1{font-size:clamp(32px,7vw,56px);margin:6px 0}.hero p{font-size:clamp(17px,3vw,22px);color:var(--muted);font-weight:750;line-height:1.6}.hero-art{font-size:clamp(90px,18vw,160px);text-align:center;filter:drop-shadow(0 10px 7px rgba(70,60,40,.15))}
+.section-title{font-size:clamp(25px,5vw,35px);margin:28px 4px 16px}.units{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.unit{min-height:150px;border:1px solid var(--line);border-radius:22px;padding:20px;background:rgba(255,255,255,.9);box-shadow:0 6px 20px rgba(54,62,92,.08);text-decoration:none;color:var(--ink);display:flex;gap:16px;align-items:center;transition:.18s transform,.18s box-shadow}.unit:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.unit-icon{font-size:52px}.unit h2{margin:0 0 6px;font-size:24px}.unit p{margin:0;color:var(--muted);font-weight:750;line-height:1.5}.unit.ready{border:3px solid #80c994}.unit.ready .status{color:#24713b}.unit.soon{opacity:.68;cursor:default}.status{font-size:14px;font-weight:900;margin-top:9px}.privacy{margin-top:22px;background:#eaf8ee;color:#24713b;border-radius:16px;padding:14px 18px;text-align:center;font-weight:850}
+@media(max-width:680px){.hero{grid-template-columns:1fr}.hero-art{display:none}.units{grid-template-columns:1fr}.app{padding:14px 12px 35px}}
+</style>
+</head>
+<body>
+<main class="app">
+  <section class="hero">
+    <div><div class="eyebrow">🌱 小步学习 · 快乐练习</div><h1>一年级数学互动学习</h1><p>选择一个单元，使用图片闪卡、互动游戏和离堂小检核学习数学词汇。</p></div>
+    <div class="hero-art" aria-hidden="true">🍉</div>
+  </section>
+  <h2 class="section-title">选择学习单元</h2>
+  <section class="units" aria-label="数学学习单元">
+    <div class="unit soon"><div class="unit-icon">🔢</div><div><h2>单元 1｜整数</h2><p>100 以内的整数</p><div class="status">准备中</div></div></div>
+    <div class="unit soon"><div class="unit-icon">➕</div><div><h2>单元 2｜基本运算</h2><p>加法与减法</p><div class="status">准备中</div></div></div>
+    <a class="unit ready" href="units/unit3-fractions.html"><div class="unit-icon">🍉</div><div><h2>单元 3｜分数</h2><p>图片闪卡、无限配对与三组挑战</p><div class="status">现在开始 →</div></div></a>
+    <div class="unit soon"><div class="unit-icon">💰</div><div><h2>单元 4｜钱币</h2><p>认识与组合钱币</p><div class="status">准备中</div></div></div>
+    <div class="unit soon"><div class="unit-icon">🕐</div><div><h2>单元 5｜时间</h2><p>钟面与日常时间</p><div class="status">准备中</div></div></div>
+    <div class="unit soon"><div class="unit-icon">📏</div><div><h2>单元 6｜度量衡</h2><p>长度、质量与容量</p><div class="status">准备中</div></div></div>
+    <div class="unit soon"><div class="unit-icon">🔷</div><div><h2>单元 7｜空间</h2><p>平面与立体图形</p><div class="status">准备中</div></div></div>
+    <div class="unit soon"><div class="unit-icon">📊</div><div><h2>单元 8｜数据处理</h2><p>象形统计图</p><div class="status">准备中</div></div></div>
+  </section>
+  <div class="privacy">🔒 可选择公开练习或班级登录；学生名单只由班级后台查找</div>
+</main>
+</body>
+</html>
