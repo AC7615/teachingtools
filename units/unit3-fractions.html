@@ -274,7 +274,7 @@ h1{font-size:clamp(25px,5vw,39px);margin:0}.subtitle{color:var(--muted);margin-t
       <div id="gameLeaderStatus" class="leader-status">正在读取排行榜……</div>
       <div id="gameLeaderTableWrap" class="leader-table-wrap hidden">
         <table class="leader-table">
-          <thead><tr><th>名次</th><th>姓名</th><th>综合分</th><th>简单</th><th>中等</th><th>困难</th></tr></thead>
+          <thead><tr><th>名次</th><th>姓名</th><th>综合分</th><th>简单</th><th>中等</th><th>困难</th><th>全部单元排名</th></tr></thead>
           <tbody id="gameLeaderBody"></tbody>
         </table>
       </div>
@@ -284,7 +284,7 @@ h1{font-size:clamp(25px,5vw,39px);margin:0}.subtitle{color:var(--muted);margin-t
       <div id="ticketLeaderStatus" class="leader-status">正在读取排行榜……</div>
       <div id="ticketLeaderTableWrap" class="leader-table-wrap hidden">
         <table class="leader-table">
-          <thead><tr><th>名次</th><th>姓名</th><th>最高分</th></tr></thead>
+          <thead><tr><th>名次</th><th>姓名</th><th>最高分</th><th>全部单元排名</th></tr></thead>
           <tbody id="ticketLeaderBody"></tbody>
         </table>
       </div>
@@ -293,6 +293,7 @@ h1{font-size:clamp(25px,5vw,39px);margin:0}.subtitle{color:var(--muted);margin-t
   </section>
 </main>
 
+<script src="../overall-ranking.js"></script>
 <script>
 const flashCards = [
   {name:"整个",number:"1",note:"完整 1 个",parts:1,taken:1},
@@ -396,7 +397,7 @@ function escapeHTML(value){
   return String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[char]));
 }
 
-async function loadLeaderboard(){
+async function loadLeaderboard(force=false){
   const gameStatus=document.getElementById("gameLeaderStatus"),gameWrap=document.getElementById("gameLeaderTableWrap");
   const ticketStatus=document.getElementById("ticketLeaderStatus"),ticketWrap=document.getElementById("ticketLeaderTableWrap");
   [gameWrap,ticketWrap].forEach(el=>el.classList.add("hidden"));
@@ -404,21 +405,21 @@ async function loadLeaderboard(){
   if(isAnonymous()){[gameStatus,ticketStatus].forEach(el=>el.textContent="请先使用班级代码登录。");return}
   if(!SHEETS_API_URL){[gameStatus,ticketStatus].forEach(el=>el.textContent="尚未连接 Google Sheet。");return}
   try{
-    const data=await postApi({action:"leaderboard",unit:"单元3：分数",sessionToken});
+    const [data,overall]=await Promise.all([postApi({action:"leaderboard",unit:"单元3：分数",sessionToken}),OverallRanking.calculate(SHEETS_API_URL,sessionToken,force)]),overallRanks=overall.rankByName;
     if(data.error)throw new Error(data.error);
     const gameRows=data.gameLeaderboard||data.leaderboard||[],ticketRows=data.ticketLeaderboard||[];
     const medal=i=>["🥇","🥈","🥉"][i]||i+1;
     if(gameRows.length){
-      document.getElementById("gameLeaderBody").innerHTML=gameRows.map((r,i)=>`<tr class="${i<3?"top"+(i+1):""}"><td>${medal(i)}</td><td>${escapeHTML(r.name)}</td><td class="leader-score">${r.score}</td><td class="difficulty-score">${r.easy??"—"}</td><td class="difficulty-score">${r.medium??"—"}</td><td class="difficulty-score">${r.hard??"—"}</td></tr>`).join("");
+      document.getElementById("gameLeaderBody").innerHTML=gameRows.map((r,i)=>`<tr class="${i<3?"top"+(i+1):""}"><td>${medal(i)}</td><td>${escapeHTML(r.name)}</td><td class="leader-score">${r.score}</td><td class="difficulty-score">${r.easy??"—"}</td><td class="difficulty-score">${r.medium??"—"}</td><td class="difficulty-score">${r.hard??"—"}</td><td>${overallRanks.get(String(r.name))??"—"}</td></tr>`).join("");
       gameStatus.classList.add("hidden");gameWrap.classList.remove("hidden");
     }else gameStatus.textContent="还没有配对游戏成绩。";
     if(ticketRows.length){
-      document.getElementById("ticketLeaderBody").innerHTML=ticketRows.map((r,i)=>`<tr class="${i<3?"top"+(i+1):""}"><td>${medal(i)}</td><td>${escapeHTML(r.name)}</td><td class="leader-score">${r.score}</td></tr>`).join("");
+      document.getElementById("ticketLeaderBody").innerHTML=ticketRows.map((r,i)=>`<tr class="${i<3?"top"+(i+1):""}"><td>${medal(i)}</td><td>${escapeHTML(r.name)}</td><td class="leader-score">${r.score}</td><td>${overallRanks.get(String(r.name))??"—"}</td></tr>`).join("");
       ticketStatus.classList.add("hidden");ticketWrap.classList.remove("hidden");
     }else ticketStatus.textContent="还没有离堂小检核成绩。";
   }catch(error){[gameStatus,ticketStatus].forEach(el=>el.textContent="暂时无法读取排行榜，请检查网络。");}
 }
-document.getElementById("refreshLeaderboard").onclick=loadLeaderboard;
+document.getElementById("refreshLeaderboard").onclick=()=>loadLeaderboard(true);
 
 function shuffle(a){
   const copy=[...a];for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]]}return copy;
