@@ -175,22 +175,7 @@ h1{font-size:clamp(25px,5vw,39px);margin:0}.subtitle{color:var(--muted);margin-t
     <a class="badge" href="../index.html">← 单元主页</a>
   </header>
 
-  <section class="access-card" aria-label="选择使用方式">
-    <div class="access-choice">
-      <button class="access-btn active" type="button" data-access="public">🌍 公开练习<small>不登录 · 不记录成绩</small></button>
-      <button class="access-btn" type="button" data-access="class">🏫 班级登录<small>记录最高成绩 · 查看排行榜</small></button>
-    </div>
-    <div class="public-note" id="publicAccessNote">现在是公开练习模式，不会读取学生名单。</div>
-    <form class="class-login hidden" id="classLoginForm">
-      <div class="login-field"><label for="classCode">班级代码</label><input id="classCode" maxlength="20" autocomplete="off" placeholder="向老师索取"></div>
-      <div class="login-field"><label for="studentNo">序号</label><input id="studentNo" inputmode="numeric" maxlength="3" autocomplete="off" placeholder="例如 8"></div>
-      <button class="lookup-btn" id="lookupStudent" type="submit">登录</button>
-    </form>
-    <div class="student-row">
-      <div class="student-display" id="studentDisplay">🌍 公开练习｜成绩不记录</div>
-      <button class="logout-btn hidden" id="logoutStudent" type="button">退出班级</button>
-    </div>
-  </section>
+  <section class="access-card" aria-label="当前使用方式"><div class="student-row"><div class="student-display" id="studentDisplay">🌍 公开练习｜成绩不记录</div><a class="logout-btn" href="../index.html">在主页更改使用方式</a></div></section>
 
   <nav class="tabs" aria-label="学习活动">
     <button class="tab active" data-target="flash">🃏 图片闪卡</button>
@@ -325,7 +310,7 @@ const gameFractions=[
 ];
 const colors=["#ff806d","#5dbb7a","#6f8df4","#f2b544","#b77adf","#42aebb","#ef739b","#8aae50","#ff9851","#7581c9"];
 
-const SHEETS_API_URL="https://script.google.com/macros/s/AKfycbywytTHCDjJnRskGaP-Ls2Q4XLZMwWnl0MAofy-zyH6qjPNEb9WmNKQzMIPjStd4y0H/exec";
+const SHEETS_API_URL="https://script.google.com/macros/s/AKfycbywytTHCDjJnRskGaP-Ls2Q4XLZMwWnl0MAofy-zyH6qjPNEb9WmNKQzMIPjStd4y0H/exec",SESSION_KEY="year1MathAccess";
 let accessMode="public",currentStudent=null,sessionToken="";
 
 function pictureHTML(type,parts,taken,small=false){
@@ -385,57 +370,14 @@ document.querySelectorAll(".tab").forEach(btn=>btn.onclick=()=>{
   if(btn.dataset.target==="leaderboard")loadLeaderboard();
 });
 
-function setAccessMode(mode){
-  accessMode=mode;currentStudent=null;sessionToken="";
-  document.querySelectorAll(".access-btn").forEach(btn=>btn.classList.toggle("active",btn.dataset.access===mode));
-  document.getElementById("publicAccessNote").classList.toggle("hidden",mode!=="public");
-  document.getElementById("classLoginForm").classList.toggle("hidden",mode!=="class");
-  document.getElementById("logoutStudent").classList.add("hidden");
-  const display=document.getElementById("studentDisplay");
-  display.classList.remove("error");
-  display.textContent=mode==="public"?"🌍 公开练习｜成绩不记录":"请输入班级代码和序号";
-  document.getElementById("ticketStudent").textContent=mode==="public"?"🌍 公开练习｜不记录姓名":"请先完成班级登录";
-  const leaderTab=document.querySelector('[data-target="leaderboard"]');
-  leaderTab.classList.add("hidden");
-  if(document.getElementById("leaderboard").classList.contains("active"))document.querySelector('[data-target="flash"]').click();
-}
-
 async function postApi(payload){
   const response=await fetch(SHEETS_API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload)});
   if(!response.ok)throw new Error(`HTTP ${response.status}`);
   return response.json();
 }
 
-async function loginStudent(event){
-  event.preventDefault();
-  const code=document.getElementById("classCode").value.trim();
-  const no=document.getElementById("studentNo").value.trim();
-  const display=document.getElementById("studentDisplay"),button=document.getElementById("lookupStudent");
-  currentStudent=null;sessionToken="";display.classList.remove("error");
-  if(!code||!/^\d{1,3}$/.test(no)){display.textContent="请输入班级代码和正确序号";display.classList.add("error");return}
-  button.disabled=true;button.textContent="登录中…";display.textContent="正在向后台查找姓名…";
-  try{
-    const data=await postApi({action:"login",classCode:code,studentNo:no});
-    if(data.error){
-      const messages={class_code_invalid:"班级代码不正确",student_not_found:"找不到这个序号",class_code_not_configured:"老师尚未设置班级代码"};
-      display.textContent=messages[data.error]||"暂时无法登录";display.classList.add("error");return;
-    }
-    const student=data.student||{};
-    currentStudent={no:String(student.studentNo),cn:student.chineseName||"",en:student.englishName||""};
-    sessionToken=String(data.sessionToken||"");
-    display.textContent=`✅ ${currentStudent.cn}｜${currentStudent.en}`;
-    document.getElementById("ticketStudent").textContent=`✅ ${currentStudent.cn}｜成绩会记录`;
-    document.getElementById("classLoginForm").classList.add("hidden");
-    document.getElementById("logoutStudent").classList.remove("hidden");
-    document.querySelector('[data-target="leaderboard"]').classList.remove("hidden");
-    document.getElementById("classCode").value="";
-  }catch(error){display.textContent="暂时无法连接班级后台";display.classList.add("error")}
-  finally{button.disabled=false;button.textContent="登录"}
-}
-
-document.querySelectorAll(".access-btn").forEach(btn=>btn.onclick=()=>setAccessMode(btn.dataset.access));
-document.getElementById("classLoginForm").addEventListener("submit",loginStudent);
-document.getElementById("logoutStudent").onclick=()=>setAccessMode("public");
+function loadHomeSession(){let data=null;try{data=JSON.parse(sessionStorage.getItem(SESSION_KEY)||"null")}catch(_){}if(!data)try{data=window.name.startsWith(`${SESSION_KEY}:`)?JSON.parse(window.name.slice(SESSION_KEY.length+1)):null}catch(_){}const valid=data?.mode==="class"&&data.sessionToken&&data.student;accessMode=valid?"class":"public";currentStudent=valid?data.student:null;sessionToken=valid?String(data.sessionToken):"";document.getElementById("studentDisplay").textContent=valid?`✅ ${currentStudent.cn}｜${currentStudent.en}`:"🌍 公开练习｜成绩不记录";document.getElementById("ticketStudent").textContent=valid?`✅ ${currentStudent.cn}｜成绩会记录`:"🌍 公开练习｜不记录姓名";document.querySelector('[data-target="leaderboard"]').classList.toggle("hidden",!valid)}
+loadHomeSession();
 
 function isAnonymous(){return accessMode!=="class"||!currentStudent||!sessionToken}
 async function saveResult(result,statusId){

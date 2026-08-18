@@ -11,7 +11,8 @@
 .eyebrow{font-weight:900;color:var(--green)}h1{font-size:clamp(32px,7vw,56px);margin:6px 0}.hero p{font-size:clamp(17px,3vw,22px);color:var(--muted);font-weight:750;line-height:1.6}.hero-art{font-size:clamp(90px,18vw,160px);text-align:center;filter:drop-shadow(0 10px 7px rgba(70,60,40,.15))}
 .section-title{font-size:clamp(25px,5vw,35px);margin:28px 4px 16px}.units{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.unit{min-height:150px;border:1px solid var(--line);border-radius:22px;padding:20px;background:rgba(255,255,255,.9);box-shadow:0 6px 20px rgba(54,62,92,.08);text-decoration:none;color:var(--ink);display:flex;gap:16px;align-items:center;transition:.18s transform,.18s box-shadow}.unit:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
 .unit-icon{font-size:52px}.unit h2{margin:0 0 6px;font-size:24px}.unit p{margin:0;color:var(--muted);font-weight:750;line-height:1.5}.unit.ready{border:3px solid #80c994}.unit.ready .status{color:#24713b}.unit.soon{opacity:.68;cursor:default}.status{font-size:14px;font-weight:900;margin-top:9px}.privacy{margin-top:22px;background:#eaf8ee;color:#24713b;border-radius:16px;padding:14px 18px;text-align:center;font-weight:850}.teacher-link{display:block;width:max-content;margin:15px auto 0;color:#6166c7;font-weight:850;text-decoration:none}
-@media(max-width:680px){.hero{grid-template-columns:1fr}.hero-art{display:none}.units{grid-template-columns:1fr}.app{padding:14px 12px 35px}}
+.access{margin-top:18px;background:#fff;border:1px solid var(--line);border-radius:22px;padding:16px;box-shadow:0 6px 20px rgba(54,62,92,.08)}.access-choice{display:grid;grid-template-columns:1fr 1fr;gap:10px}.access-btn{border:3px solid transparent;border-radius:14px;padding:12px;background:#f4f5f9;color:var(--ink);font-weight:950;cursor:pointer}.access-btn small{display:block;color:var(--muted);margin-top:3px}.access-btn.active{border-color:var(--purple);background:#eef0ff;color:#5055c4}.class-form{display:grid;grid-template-columns:1fr 130px auto;gap:9px;align-items:end;margin-top:13px}.field{display:grid;gap:5px}.field label{font-weight:900}.field input{width:100%;border:2px solid #d9dce7;border-radius:11px;padding:10px;outline:none}.login-btn{border:0;border-radius:11px;padding:11px 16px;background:var(--purple);color:#fff;font-weight:950;cursor:pointer}.session-row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px}.session-status{font-weight:950;color:#24713b}.session-status.error{color:#b44541}.logout-btn{border:0;background:none;color:#565cc2;font-weight:900;text-decoration:underline;cursor:pointer}.hidden{display:none!important}
+@media(max-width:680px){.hero{grid-template-columns:1fr}.hero-art{display:none}.units,.access-choice,.class-form{grid-template-columns:1fr}.app{padding:14px 12px 35px}}
 </style>
 </head>
 <body>
@@ -19,6 +20,11 @@
   <section class="hero">
     <div><div class="eyebrow">🌱 小步学习 · 快乐练习</div><h1>一年级数学互动学习</h1><p>选择一个单元，使用图片闪卡、互动游戏和离堂小检核学习数学词汇。</p></div>
     <div class="hero-art" aria-hidden="true">🍉</div>
+  </section>
+  <section class="access" aria-label="选择使用方式">
+    <div class="access-choice"><button class="access-btn active" type="button" data-access="public">🌍 公开练习<small>不登录 · 不记录成绩</small></button><button class="access-btn" type="button" data-access="class">🏫 班级登录<small>记录最高成绩 · 查看排行榜</small></button></div>
+    <form class="class-form hidden" id="classForm"><div class="field"><label for="classCode">班级代码</label><input id="classCode" maxlength="20" autocomplete="off" placeholder="向老师索取"></div><div class="field"><label for="studentNo">序号</label><input id="studentNo" inputmode="numeric" maxlength="3" placeholder="例如 8"></div><button class="login-btn" id="loginBtn">登录</button></form>
+    <div class="session-row"><div class="session-status" id="sessionStatus">🌍 公开练习｜成绩不记录</div><button class="logout-btn hidden" id="logoutBtn" type="button">退出班级</button></div>
   </section>
   <h2 class="section-title">选择学习单元</h2>
   <section class="units" aria-label="数学学习单元">
@@ -34,5 +40,15 @@
   <div class="privacy">🔒 可选择公开练习或班级登录；学生名单只由班级后台查找</div>
   <a class="teacher-link" href="teacher/index.html">📊 教师后台</a>
 </main>
+<script>
+const API_URL="https://script.google.com/macros/s/AKfycbywytTHCDjJnRskGaP-Ls2Q4XLZMwWnl0MAofy-zyH6qjPNEb9WmNKQzMIPjStd4y0H/exec",SESSION_KEY="year1MathAccess";
+function readSession(){try{const saved=JSON.parse(sessionStorage.getItem(SESSION_KEY)||"null");if(saved)return saved}catch(_){}try{return window.name.startsWith(`${SESSION_KEY}:`)?JSON.parse(window.name.slice(SESSION_KEY.length+1)):null}catch(_){return null}}
+function writeSession(value){const text=JSON.stringify(value);try{sessionStorage.setItem(SESSION_KEY,text)}catch(_){}window.name=`${SESSION_KEY}:${text}`}
+function showSession(data){const isClass=data?.mode==="class"&&data.sessionToken&&data.student;document.querySelectorAll("[data-access]").forEach(x=>x.classList.toggle("active",x.dataset.access===(isClass?"class":"public")));document.getElementById("classForm").classList.add("hidden");document.getElementById("logoutBtn").classList.toggle("hidden",!isClass);document.getElementById("sessionStatus").textContent=isClass?`✅ ${data.student.cn}｜${data.student.en}`:"🌍 公开练习｜成绩不记录"}
+document.querySelector('[data-access="public"]').onclick=()=>{const data={mode:"public"};writeSession(data);showSession(data)};
+document.querySelector('[data-access="class"]').onclick=()=>{document.querySelectorAll("[data-access]").forEach(x=>x.classList.toggle("active",x.dataset.access==="class"));document.getElementById("classForm").classList.remove("hidden");document.getElementById("sessionStatus").textContent="请输入班级代码和序号"};
+document.getElementById("classForm").onsubmit=async e=>{e.preventDefault();const status=document.getElementById("sessionStatus"),button=document.getElementById("loginBtn"),classCode=document.getElementById("classCode").value.trim(),studentNo=document.getElementById("studentNo").value.trim();status.classList.remove("error");if(!classCode||!/^\d{1,3}$/.test(studentNo)){status.textContent="请输入班级代码和正确序号";status.classList.add("error");return}button.disabled=true;button.textContent="登录中…";try{const response=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"login",classCode,studentNo})}),result=await response.json();if(!response.ok||result.error||!result.sessionToken)throw new Error(result.error||"network");const student=result.student||{},data={mode:"class",sessionToken:String(result.sessionToken),student:{no:String(student.studentNo),cn:student.chineseName||"",en:student.englishName||""}};writeSession(data);showSession(data)}catch(err){const messages={class_code_invalid:"班级代码不正确",student_not_found:"找不到这个序号",class_code_not_configured:"老师尚未设置班级代码"};status.textContent=messages[err.message]||"暂时无法登录";status.classList.add("error")}finally{button.disabled=false;button.textContent="登录"}};
+document.getElementById("logoutBtn").onclick=()=>document.querySelector('[data-access="public"]').click();showSession(readSession()||{mode:"public"});if(!readSession())writeSession({mode:"public"});
+</script>
 </body>
 </html>
