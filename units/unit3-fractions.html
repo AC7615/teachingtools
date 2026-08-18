@@ -99,21 +99,23 @@ h1{font-size:clamp(25px,5vw,39px);margin:0}.subtitle{color:var(--muted);margin-t
 .mode-btn{border:3px solid transparent;border-radius:14px;padding:12px;background:#fff;color:var(--ink);font-weight:950;cursor:pointer;box-shadow:0 3px 12px rgba(55,62,90,.07)}
 .mode-btn.active{border-color:var(--green);background:#ecf9ef;color:#24713b}
 .mode-btn small{display:block;margin-top:3px;color:var(--muted);font-weight:750}
-.difficulty-box{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:16px;padding:12px;background:#f5f6fb;border-radius:16px}
-.difficulty-btn{border:2px solid transparent;border-radius:12px;padding:9px 13px;background:#fff;color:var(--ink);font-weight:900;cursor:pointer}
+.difficulty-box{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-bottom:16px;padding:12px;background:#f5f6fb;border-radius:16px}
+.difficulty-btn{min-height:46px;border:2px solid transparent;border-radius:12px;padding:9px 13px;background:#fff;color:var(--ink);font-weight:900;cursor:pointer}
 .difficulty-btn.active{border-color:var(--purple);background:#eceeff;color:#4d52c9}
 .game-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
 .game-title{font-size:clamp(22px,5vw,30px);font-weight:950}.instruction{color:var(--muted);font-weight:800}
 .status-row{display:flex;gap:8px;flex-wrap:wrap}.score-pill,.group-pill{background:#eef8f0;color:#24713b;border-radius:99px;padding:9px 14px;font-weight:900}
 .group-pill{background:#fff4db;color:#8a5a00}
+.challenge-stars{min-width:112px;border:2px solid #f1cd69;border-radius:99px;background:#fff8db;color:#e19a16;padding:7px 11px;text-align:center;font-size:23px;line-height:1;font-weight:950}
+.star-progress{display:inline-flex;align-items:center;justify-content:center;gap:7px}.progress-star{display:inline-block}.progress-star.pending{filter:grayscale(1);opacity:.22}.progress-star.done{filter:none;opacity:1}
 .match-board{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:stretch}
 .match-column{display:grid;gap:11px}
 .match-item{
   min-height:145px;background:#fff;border:3px solid transparent;border-radius:14px;display:flex;align-items:center;
   justify-content:center;cursor:pointer;transition:transform .16s,border-color .16s,background .16s;box-shadow:0 5px 16px rgba(55,62,90,.08)
 }
-.match-item:hover{transform:translateY(-2px)}.match-item.selected{border-color:var(--purple);background:#f0f1ff;transform:scale(1.02)}
-.match-item.matched{border-color:var(--green);background:#ebfaef;cursor:default;animation:pop .32s ease}
+.match-item:hover{transform:translateY(-2px)}.match-item.selected{border-color:var(--pair,var(--purple));background:var(--pair-bg,#f0f1ff);transform:scale(1.02)}
+.match-item.matched{border-color:var(--pair,var(--green));background:var(--pair-bg,#ebfaef);cursor:default;animation:pop .32s ease}.match-item.matched .word-label,.match-item.matched .fraction-label{color:var(--pair,var(--green))}
 .match-item.wrong{border-color:#ef6d67;background:#fff0ef;animation:shake .3s}
 .word-label{font-size:clamp(26px,5vw,39px);font-weight:950;color:var(--purple)}
 .fraction-stack{display:inline-grid;grid-template-rows:auto 3px auto;min-width:1.3em;text-align:center;vertical-align:middle;font-weight:950;line-height:1}
@@ -128,7 +130,7 @@ h1{font-size:clamp(25px,5vw,39px);margin:0}.subtitle{color:var(--muted);margin-t
 .game-shape.parts-4 .shape-part:nth-child(odd){border-right:3px dashed #566074}
 .game-shape.parts-4 .shape-part:nth-child(-n+2){border-bottom:3px dashed #566074}
 .game-message{text-align:center;min-height:38px;margin-top:14px;font-size:21px;font-weight:900}
-.finish{text-align:center;padding:24px}.stars{font-size:48px}.finish h2{font-size:32px;margin:7px}.hidden{display:none!important}
+.finish{text-align:center;padding:24px}.stars{font-size:48px}.finish h2{font-size:32px;margin:7px}.finish-actions{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin-top:26px}.next-level{background:#ee8748;color:#fff}.hidden{display:none!important}
 
 /* 离堂小检核 */
 .ticket-card{background:rgba(255,255,255,.88);border:1px solid var(--line);border-radius:25px;padding:24px;box-shadow:var(--shadow)}
@@ -163,15 +165,17 @@ h1{font-size:clamp(25px,5vw,39px);margin:0}.subtitle{color:var(--muted);margin-t
 @keyframes pop{50%{transform:scale(1.07)}}
 @media(max-width:600px){
   .app{padding:13px}.scene{height:390px}.picture{width:220px;height:220px}.face{padding:18px}
-  .access-card{padding:11px}.access-choice{grid-template-columns:1fr}.class-login{grid-template-columns:1fr}.student-display{width:100%}.game-card,.ticket-card,.leader-card{padding:13px}.match-board{gap:9px}.match-column{gap:9px}.match-item{min-height:121px}.picture.small{width:104px;height:104px}.game-shape{width:92px;height:92px}.ticket-options{gap:8px}.ticket-option{min-height:78px}.leader-table th,.leader-table td{padding:10px 6px;font-size:14px}
+  .tabs{flex-wrap:nowrap;overflow-x:auto;gap:7px;margin-inline:-2px;padding:2px 2px 7px;scroll-snap-type:x proximity;overscroll-behavior-x:contain;scrollbar-width:thin}.tab{flex:0 0 auto;min-height:48px;padding:11px 16px;white-space:nowrap;scroll-snap-align:start}
+  .access-card{padding:11px}.access-choice{grid-template-columns:1fr}.class-login{grid-template-columns:1fr}.student-display{width:100%}.game-card,.ticket-card,.leader-card{padding:13px}.difficulty-box{gap:6px;padding:8px}.difficulty-btn{min-width:0;min-height:50px;padding:9px 4px;font-size:16px}.match-board{gap:9px}.match-column{gap:9px}.match-item{min-height:121px}.picture.small{width:104px;height:104px}.game-shape{width:92px;height:92px}.ticket-options{gap:8px}.ticket-option{min-height:78px}.leader-table th,.leader-table td{padding:10px 6px;font-size:14px}.status-row{width:100%}.challenge-stars{flex:1}.score-pill,.group-pill{padding:8px 11px}
 }
 @media(prefers-reduced-motion:reduce){.flashcard,.match-item{transition:none}.match-item{animation:none!important}}
+#startTicket{margin-top:26px}
 </style>
 </head>
 <body>
 <main class="app">
   <header class="header">
-    <div><h1>🍉 单元 3｜分数</h1><div class="subtitle">看图片 · 翻闪卡 · 玩配对</div></div>
+    <div><h1>🍉 单元 3｜分数</h1></div>
     <a class="badge" href="../index.html">← 单元主页</a>
   </header>
 
@@ -214,24 +218,24 @@ h1{font-size:clamp(25px,5vw,39px);margin:0}.subtitle{color:var(--muted);margin-t
   <section id="game" class="panel">
     <div class="game-card" id="gameCard">
       <div class="mode-box" aria-label="选择游戏模式">
-        <button class="mode-btn active" data-mode="practice">♾️ 无限练习<small>不计成绩</small></button>
-        <button class="mode-btn" data-mode="challenge">🏆 三组挑战<small>需完成3组练习</small></button>
+        <button class="mode-btn active" data-mode="practice">♾️ 无限练习</button>
+        <button class="mode-btn" data-mode="challenge">🏆 排行挑战</button>
       </div>
       <div class="difficulty-box" aria-label="选择难度">
-        <button class="difficulty-btn active" data-level="easy">🌱 简单｜图配文字</button>
-        <button class="difficulty-btn" data-level="medium">🌿 中等｜图配数字</button>
-        <button class="difficulty-btn" data-level="hard">🌳 困难｜文字配数字</button>
+        <button class="difficulty-btn active" data-level="easy">🌱 简单</button>
+        <button class="difficulty-btn" data-level="medium">🌿 中等</button>
+        <button class="difficulty-btn" data-level="hard">🌳 困难</button>
       </div>
       <div class="game-top">
         <div><div class="game-title">找一找，配一配！</div><div class="instruction" id="instruction">点图形，再点分数文字。</div></div>
-        <div class="status-row"><div class="group-pill" id="groupPill">无限练习｜第 1 组</div><div class="score-pill" id="scorePill">⭐ 0 / 4</div></div>
+        <div class="status-row"><div class="group-pill" id="groupPill">无限练习｜第 1 组</div><div class="challenge-stars star-progress hidden" id="challengeStars" aria-label="三组挑战进度"><span class="progress-star pending">⭐</span><span class="progress-star pending">⭐</span><span class="progress-star pending">⭐</span></div><div class="score-pill" id="scorePill">⭐ 0 / 4</div></div>
       </div>
       <div id="board" class="match-board"></div>
       <div id="gameMessage" class="game-message" aria-live="polite"></div>
       <div id="finish" class="finish hidden">
-        <div class="stars">🌟🌟🌟</div><h2>这一组完成！</h2><p id="finishText">还有 9 组，加油！</p>
+        <div class="stars star-progress" id="finishStars"><span class="progress-star done">⭐</span></div><h2>这一组完成！</h2><p id="finishText">继续练习，加油！</p>
         <div class="save-status" id="gameSaveStatus"></div>
-        <button class="again" id="again">下一组 →</button>
+        <div class="finish-actions"><button class="again" id="again">下一组 →</button><button class="again next-level hidden" id="nextLevel">进入中等挑战 →</button></div>
       </div>
     </div>
   </section>
@@ -268,7 +272,7 @@ h1{font-size:clamp(25px,5vw,39px);margin:0}.subtitle{color:var(--muted);margin-t
     <div class="leader-grid">
     <div class="leader-card">
       <div class="leader-head">
-        <div><div class="leader-title">🎮 配对游戏排行榜</div><div class="leader-note">各难度保留最高分</div><div class="weight-note">综合分＝简单 20%＋中等 30%＋困难 50%</div></div>
+        <div><div class="leader-title">🎮 配对游戏排行榜</div><div class="weight-note">综合分＝简单 20%＋中等 30%＋困难 50%</div></div>
         <button class="refresh-btn" id="refreshLeaderboard">↻ 更新排行</button>
       </div>
       <div id="gameLeaderStatus" class="leader-status">正在读取排行榜……</div>
@@ -280,7 +284,7 @@ h1{font-size:clamp(25px,5vw,39px);margin:0}.subtitle{color:var(--muted);margin-t
       </div>
     </div>
     <div class="leader-card">
-      <div class="leader-head"><div><div class="leader-title">🎫 离堂小检核排行榜</div><div class="leader-note">每位学生只显示最高分</div></div></div>
+      <div class="leader-head"><div><div class="leader-title">🎫 离堂小检核排行榜</div></div></div>
       <div id="ticketLeaderStatus" class="leader-status">正在读取排行榜……</div>
       <div id="ticketLeaderTableWrap" class="leader-table-wrap hidden">
         <table class="leader-table">
@@ -432,13 +436,18 @@ const levelInfo={
   medium:{instruction:"点图形，再点分数数字。",left:"shape",right:"number"},
   hard:{instruction:"点分数文字，再点分数数字。",left:"word",right:"number"}
 };
+const pairColors={"1/2":["#ef765f","#fff0eb"],"1/4":["#8271df","#f0edff"],"2/4":["#3f93d5","#eaf6ff"],"3/4":["#d99228","#fff4dc"]};
+let gameAudio=null;
+function playGameSound(kind){try{const AudioEngine=window.AudioContext||window.webkitAudioContext;if(!AudioEngine)return;if(!gameAudio)gameAudio=new AudioEngine();if(gameAudio.state==="suspended")gameAudio.resume();const patterns={tap:[[430,.045]],correct:[[660,.08],[880,.11]],wrong:[[190,.13]]},start=gameAudio.currentTime;(patterns[kind]||patterns.tap).forEach(([frequency,duration],index)=>{const oscillator=gameAudio.createOscillator(),gain=gameAudio.createGain(),time=start+index*.065;oscillator.type=kind==="wrong"?"square":"sine";oscillator.frequency.setValueAtTime(frequency,time);gain.gain.setValueAtTime(kind==="tap"?.035:.075,time);gain.gain.exponentialRampToValueAtTime(.001,time+duration);oscillator.connect(gain);gain.connect(gameAudio.destination);oscillator.start(time);oscillator.stop(time+duration+.01)})}catch(_){}}
+function starProgressHTML(count){return Array.from({length:CHALLENGE_GROUPS},(_,index)=>`<span class="progress-star ${index<count?"done":"pending"}">⭐</span>`).join("")}
+function updateChallengeStars(completed){const stars=document.getElementById("challengeStars"),finishStars=document.getElementById("finishStars"),count=Math.max(0,Math.min(CHALLENGE_GROUPS,completed));stars.classList.toggle("hidden",gameMode!=="challenge");stars.innerHTML=starProgressHTML(count);stars.setAttribute("aria-label",`已完成 ${count} / ${CHALLENGE_GROUPS} 组`);finishStars.innerHTML=gameMode==="challenge"?starProgressHTML(count):'<span class="progress-star done">⭐</span>';finishStars.setAttribute("aria-label",gameMode==="challenge"?`已完成 ${count} / ${CHALLENGE_GROUPS} 组`:"完成")}
 
 function itemHTML(f,kind,setIndex,itemIndex,side){
   let content="";
   if(kind==="shape")content=gameShapeHTML(f,setIndex,itemIndex);
   if(kind==="word")content=`<span class="word-label">${f.word}</span>`;
   if(kind==="number")content=`<span class="fraction-label">${fractionHTML(f.key)}</span>`;
-  return `<button class="match-item ${side}-choice" data-key="${f.key}">${content}</button>`;
+  const colors=pairColors[f.key];return `<button class="match-item ${side}-choice" data-key="${f.key}" style="--pair:${colors[0]};--pair-bg:${colors[1]}">${content}</button>`;
 }
 
 function newGame(){
@@ -448,8 +457,10 @@ function newGame(){
   document.getElementById("board").classList.remove("hidden");
   document.getElementById("gameMessage").textContent="";
   document.getElementById("gameSaveStatus").textContent="";
+  document.getElementById("nextLevel").classList.add("hidden");
   document.getElementById("instruction").textContent=levelInfo[level].instruction;
-  document.getElementById("groupPill").textContent=gameMode==="practice"?`无限练习｜第 ${practiceGroup} 组`:`三组挑战｜第 ${groupIndex+1} / ${CHALLENGE_GROUPS} 组`;
+  document.getElementById("groupPill").textContent=gameMode==="practice"?`无限练习｜第 ${practiceGroup} 组`:`排行挑战｜第 ${groupIndex+1} / ${CHALLENGE_GROUPS} 组`;
+  updateChallengeStars(gameMode==="challenge"?groupIndex:0);
   updateScore();
   const leftItems=shuffle(gameFractions);
   const rightItems=shuffle(gameFractions);
@@ -465,6 +476,7 @@ function newGame(){
 }
 function selectItem(el,kind){
   if(locked||el.classList.contains("matched"))return;
+  playGameSound("tap");
   const old=kind==="left"?chosenLeft:chosenRight;
   if(old)old.classList.remove("selected");
   el.classList.add("selected");
@@ -476,11 +488,13 @@ function checkMatch(){
   if(chosenLeft.dataset.key===chosenRight.dataset.key){
     chosenLeft.classList.remove("selected");chosenRight.classList.remove("selected");
     chosenLeft.classList.add("matched");chosenRight.classList.add("matched");
+    playGameSound("correct");
     matches++;updateScore();document.getElementById("gameMessage").textContent="✅ 配对成功！";
     chosenLeft=null;chosenRight=null;locked=false;
     if(matches===4)setTimeout(finishGame,550);
   }else{
     wrongAttempts++;
+    playGameSound("wrong");
     chosenLeft.classList.add("wrong");chosenRight.classList.add("wrong");
     document.getElementById("gameMessage").textContent="再看一看 👀";
     setTimeout(()=>{
@@ -497,17 +511,20 @@ function finishGame(){
   document.getElementById("gameMessage").textContent="";
   document.getElementById("finish").classList.remove("hidden");
   if(gameMode==="practice"){
+    updateChallengeStars(0);
     document.getElementById("finishText").textContent=`第 ${practiceGroup} 组完成！继续产生新题。`;
     document.getElementById("gameSaveStatus").textContent="♾️ 无限练习：不记录成绩";
     document.getElementById("again").textContent="再来一组 →";
     return;
   }
   challengeWrongAttempts+=wrongAttempts;
+  updateChallengeStars(groupIndex+1);
   const last=groupIndex===CHALLENGE_GROUPS-1;
   if(last){
     const gameScore=Math.max(0,100-challengeWrongAttempts*2);
     document.getElementById("finishText").textContent=`${CHALLENGE_GROUPS} 组挑战完成！总分 ${gameScore} 分。`;
     document.getElementById("again").textContent="再挑战一次";
+    const levels=["easy","medium","hard"],nextIndex=levels.indexOf(level)+1,nextLevelButton=document.getElementById("nextLevel");nextLevelButton.classList.toggle("hidden",nextIndex>=levels.length);if(nextIndex<levels.length)nextLevelButton.textContent=`进入 ${{medium:"中等",hard:"困难"}[levels[nextIndex]]}挑战 →`;
     saveResult({activity:"配对游戏",difficulty:{easy:"简单",medium:"中等",hard:"困难"}[level],group:CHALLENGE_GROUPS,score:gameScore,total:100,wrongAttempts:challengeWrongAttempts,durationSeconds:Math.round((Date.now()-challengeStartedAt)/1000)},"gameSaveStatus");
   }else{
     document.getElementById("finishText").textContent=`还有 ${CHALLENGE_GROUPS-1-groupIndex} 组｜目前错 ${challengeWrongAttempts} 次`;
@@ -536,6 +553,7 @@ document.getElementById("again").onclick=()=>{
   else groupIndex++;
   newGame();
 };
+document.getElementById("nextLevel").onclick=()=>{const levels=["easy","medium","hard"],next=levels[levels.indexOf(level)+1];if(next)document.querySelector(`.difficulty-btn[data-level="${next}"]`).click()};
 
 /* 离堂小检核：4 种题型各 1 题 */
 const ticketModes=["shape-word","shape-number","word-number","number-word"];
