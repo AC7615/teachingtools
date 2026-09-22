@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="一年级多音多义字双组飞镖射气球互动课件">
+  <title>字音飞镖擂台</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%230b1739'/%3E%3Ccircle cx='32' cy='27' r='17' fill='%23ffcf4a'/%3E%3Cpath d='M32 44v12' stroke='%23f7f3e8' stroke-width='4'/%3E%3Cpath d='M18 27h28M32 13v28' stroke='%23ef476f' stroke-width='4'/%3E%3C/svg%3E">
+  <style>
+    :root{--ink:#0b1739;--paper:#f7f3e8;--yellow:#ffcf4a;--red:#ef476f;--cyan:#39d7d1;--blue:#1778f2;--green:#24b47e;--muted:#6d7790;--line:#dce2ef}
+    *{box-sizing:border-box} body{margin:0;font-family:"Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;background:var(--paper);color:var(--ink);min-height:100vh}
+    button,input,select{font:inherit} button{cursor:pointer} button:disabled{cursor:not-allowed;opacity:.5}
+    .app{min-height:100vh}.topbar{height:68px;padding:0 24px;background:var(--ink);color:white;display:flex;align-items:center;justify-content:space-between;gap:16px;position:sticky;top:0;z-index:20;box-shadow:0 8px 24px #0b173933}
+    .brand{display:flex;align-items:center;gap:12px;font-size:1.18rem;font-weight:900}.brand-mark{display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:var(--yellow);color:var(--ink);font-size:1.45rem}.nav{display:flex;gap:8px}.nav button{border:1px solid #ffffff36;background:transparent;color:white;border-radius:999px;padding:9px 16px;font-weight:800}.nav button.active{background:var(--yellow);color:var(--ink);border-color:var(--yellow)}
+    main{max-width:1500px;margin:auto;padding:28px}.view{display:none}.view.active{display:block}
+    .setup-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start}.setup-config{grid-column:1/-1}.class-settings{display:grid;grid-template-columns:1fr 1fr;gap:18px}.class-box{border:2px solid var(--ink);border-radius:18px;padding:16px;background:#fbfcff}.class-box.a{box-shadow:5px 5px 0 var(--cyan)}.class-box.b{box-shadow:5px 5px 0 var(--yellow)}.class-box h3{margin:0 0 4px}.panel{background:white;border:2px solid var(--ink);border-radius:22px;box-shadow:8px 8px 0 var(--ink);padding:24px}.panel h1,.panel h2,.panel h3{margin-top:0}.eyebrow{font-weight:900;color:var(--blue);letter-spacing:.08em}.title{font-size:clamp(2rem,5vw,4.8rem);line-height:1;margin:.25em 0}.title .accent{color:var(--red)}.lead{font-size:1.12rem;line-height:1.7;color:#39435b}.field{display:grid;gap:7px;margin:12px 0}.field label{font-weight:900}.field input,.field select{width:100%;border:2px solid var(--line);border-radius:12px;padding:12px;background:white}.field input:focus,.field select:focus{outline:3px solid #39d7d155;border-color:var(--cyan)}.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .roster-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.roster-help{color:var(--muted);font-size:.92rem}.numbers{display:flex;flex-wrap:wrap;gap:8px;max-height:260px;overflow:auto;padding:4px}.num{width:44px;height:44px;border:2px solid var(--ink);border-radius:12px;background:white;font-weight:900}.roster-panel.a .num{box-shadow:3px 3px 0 var(--cyan)}.roster-panel.b .num{box-shadow:3px 3px 0 var(--yellow)}.num.absent{background:#e8ebf2;color:#9ca4b5;text-decoration:line-through;box-shadow:none!important;border-color:#b8c0d0}.legend{display:flex;gap:18px;margin-top:16px;flex-wrap:wrap}.legend span{display:flex;align-items:center;gap:7px}.dot{width:12px;height:12px;border-radius:50%;background:var(--green)}.dot.abs{background:#b8c0d0}
+    .primary,.secondary,.danger,.teacher-btn{border:2px solid var(--ink);border-radius:13px;padding:12px 18px;font-weight:900;box-shadow:4px 4px 0 var(--ink)}.primary{background:var(--yellow)}.secondary{background:white}.danger{background:var(--red);color:white}.primary:active,.secondary:active,.danger:active,.teacher-btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+    #lesson{font-family:"KaiTi","STKaiti","Kaiti SC","DFKai-SB",serif}.lesson-head{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:18px}.lesson-head h1{font-size:clamp(2rem,4vw,3.6rem);margin:0}.progress-pill{background:var(--ink);color:white;padding:10px 16px;border-radius:999px;font-weight:900}.lesson-layout{display:grid;grid-template-columns:210px 1fr;gap:22px}.char-tabs{display:grid;gap:10px;align-content:start;position:sticky;top:94px}.char-tab{border:2px solid var(--ink);border-radius:14px;background:white;padding:12px;font-size:1.1rem;font-weight:900;text-align:left}.char-tab.active{background:var(--yellow);box-shadow:4px 4px 0 var(--ink)}
+    .teach-card{background:var(--ink);border-radius:26px;color:white;padding:30px;min-height:500px;position:relative;overflow:hidden}.teach-card:after{content:"";position:absolute;width:260px;height:260px;border:46px solid #ffffff0d;border-radius:50%;right:-60px;bottom:-90px}.big-char{font-size:clamp(5rem,13vw,11rem);font-weight:900;color:var(--yellow);line-height:1}.reading-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;position:relative;z-index:1}.reading{background:white;color:var(--ink);border-radius:18px;padding:28px;border-left:9px solid var(--cyan)}.reading:nth-child(2){border-left-color:var(--red)}.pinyin{font-size:clamp(3rem,4.4vw,4rem);font-weight:900;line-height:1.1}.words{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}.word{background:#edf9f8;border-radius:999px;padding:11px 19px;font-size:clamp(1.85rem,2.5vw,2.3rem);line-height:1.2;font-weight:900}.meaning{font-size:clamp(1.7rem,2.2vw,2rem);line-height:1.55;color:#303950;font-weight:700}.source-note{position:relative;z-index:1;margin-top:20px;color:#c7d0e7}.lesson-controls{display:flex;gap:12px;margin-top:18px;justify-content:flex-end}
+    .game-shell{display:grid;gap:14px}.scoreboard{display:grid;grid-template-columns:1fr auto 1fr;gap:18px;align-items:center;background:var(--ink);color:white;border-radius:22px;padding:15px 22px}.score-team{display:flex;align-items:center;justify-content:space-between;gap:12px}.score-team.right{flex-direction:row-reverse}.score-name{font-size:1.2rem;font-weight:900}.score{font-size:2.2rem;font-weight:900;color:var(--yellow)}.clock{text-align:center;background:white;color:var(--ink);border-radius:16px;padding:8px 18px;min-width:132px}.clock-label{font-size:.75rem;font-weight:900;color:var(--muted)}.clock-value{font-variant-numeric:tabular-nums;font-size:2rem;font-weight:900}
+    .arenas{display:grid;grid-template-columns:1fr 1fr;gap:14px}.arena{position:relative;background:white;border:3px solid var(--ink);border-radius:24px;min-height:550px;padding:18px;overflow:hidden}.arena.a{box-shadow:-8px 8px 0 var(--cyan)}.arena.b{box-shadow:8px 8px 0 var(--yellow)}.playerbar{display:flex;align-items:center;justify-content:space-between;gap:10px}.player{font-weight:900;font-size:1.15rem}.combo{background:#efe9ff;color:#6c49aa;padding:6px 10px;border-radius:999px;font-weight:900}.lives{font-size:1.3rem;letter-spacing:.08em}.prompt{margin:18px auto 2px;text-align:center}.prompt-label{font-size:.88rem;color:var(--muted);font-weight:900}.prompt-word{font-size:clamp(2.6rem,5vw,5.5rem);font-weight:900;margin:4px 0}.prompt-hint{font-size:1rem;color:#566078}.balloons{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:12px auto;max-width:560px}.balloon{--balloon-fill:#e9d7ff;--balloon-dark:#c8a8ef;position:relative;border:0;background:transparent;height:220px;color:var(--ink);font-weight:900;transition:transform .18s;isolation:isolate}.balloon.pastel-1{--balloon-fill:#f8cfe0;--balloon-dark:#e8a9c3}.balloon.pastel-2{--balloon-fill:#cfe9ff;--balloon-dark:#9cc8ef}.balloon.pastel-3{--balloon-fill:#d7f3e5;--balloon-dark:#9fd8bd}.balloon.pastel-4{--balloon-fill:#eadcff;--balloon-dark:#c4a9ed}.balloon-art{position:absolute;width:178px;height:218px;left:50%;top:0;transform:translateX(-50%);z-index:0;filter:drop-shadow(0 10px 8px #0b173929)}.balloon-label{position:relative;z-index:2;display:grid;place-items:center;height:150px;font-size:clamp(1.45rem,3vw,2.35rem);line-height:1;padding:0 18px}.balloon:hover{transform:translateY(-7px) rotate(2deg)}.burst-particles{position:absolute;left:50%;top:35%;z-index:4;font-size:3rem;color:#ffd45f;opacity:0;transform:translate(-50%,-50%) scale(.2);pointer-events:none;white-space:nowrap}.balloon.pop .balloon-art{animation:balloonBurst .48s ease-out forwards}.balloon.pop .balloon-label{animation:labelBurst .48s ease-out forwards}.balloon.pop .burst-particles{animation:burstFx .55s ease-out forwards}.feedback{text-align:center;min-height:34px;font-size:1.15rem;font-weight:900}.feedback.good{color:var(--green)}.feedback.bad{color:var(--red)}.dart{position:absolute;font-size:3rem;left:50%;bottom:15px;opacity:0;pointer-events:none}.dart.fly-left{animation:flyLeft .42s ease-out}.dart.fly-right{animation:flyRight .42s ease-out}
+    @keyframes balloonBurst{0%{transform:translateX(-50%) scale(1)}35%{transform:translateX(-50%) scale(1.18)}65%{filter:brightness(1.5) drop-shadow(0 0 18px #fff)}100%{transform:translateX(-50%) scale(.08) rotate(18deg);opacity:0}}@keyframes labelBurst{0%{transform:scale(1)}35%{transform:scale(1.18)}100%{transform:scale(.08) rotate(18deg);opacity:0}}@keyframes burstFx{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}35%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(2.6) rotate(25deg)}}@keyframes flyLeft{0%{opacity:1;transform:translate(-20px,0) rotate(-35deg)}100%{opacity:1;transform:translate(-180px,-260px) rotate(-35deg)}}@keyframes flyRight{0%{opacity:1;transform:translate(20px,0) rotate(-35deg)}100%{opacity:1;transform:translate(180px,-260px) rotate(-35deg)}}
+    .team-pause{position:absolute;inset:0;background:#0b1739ee;color:white;z-index:5;display:none;place-items:center;text-align:center;padding:24px}.team-pause.show{display:grid}.pause-card h3{font-size:2rem;margin-bottom:8px}.pause-card p{color:#d5dbeb}.team-start{margin-top:10px}.class-overlay{position:fixed;inset:68px 0 0;background:#0b1739e8;color:white;z-index:30;display:none;place-items:center;text-align:center}.class-overlay.show{display:grid}.class-overlay .pause-icon{font-size:6rem}.class-overlay h2{font-size:3rem;margin:.2em}.teacher-dock{background:#eaf0ff;border:2px solid var(--ink);border-radius:18px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}.teacher-actions{display:flex;gap:8px;flex-wrap:wrap}.teacher-btn{background:white;padding:9px 13px;box-shadow:3px 3px 0 var(--ink)}.teacher-btn.pause{background:var(--red);color:white}.game-state{font-weight:900}.winner{position:fixed;inset:68px 0 0;background:#0b1739f2;color:white;z-index:40;display:none;place-items:center;text-align:center;padding:25px}.winner.show{display:grid}.trophy{font-size:6rem}.winner h2{font-size:clamp(2.5rem,6vw,5rem);margin:.15em}.winner-scores{font-size:1.35rem;margin-bottom:20px}
+    .toast{position:fixed;right:22px;top:86px;background:var(--ink);color:white;padding:12px 17px;border-radius:13px;font-weight:900;z-index:60;transform:translateY(-20px);opacity:0;transition:.2s;pointer-events:none}.toast.show{opacity:1;transform:none}.small{font-size:.9rem;color:var(--muted)}
+    @media(max-width:900px){main{padding:16px}.setup-grid,.lesson-layout,.class-settings{grid-template-columns:1fr}.setup-config{grid-column:auto}.char-tabs{position:static;display:flex;overflow:auto}.char-tab{min-width:68px;text-align:center}.arenas{grid-template-columns:1fr}.arena{min-height:500px}.scoreboard{grid-template-columns:1fr 120px 1fr}.topbar{padding:0 12px}.brand span:last-child{display:none}.nav button{padding:8px 10px}.reading-grid{grid-template-columns:1fr}.teach-card{min-height:auto}.balloons{max-width:450px}}
+    @media(max-width:620px){.row{grid-template-columns:1fr}.scoreboard{gap:6px;padding:12px}.score-team,.score-team.right{display:block;text-align:center}.score-name{font-size:.88rem}.score{font-size:1.7rem}.clock{min-width:94px;padding:6px}.clock-value{font-size:1.4rem}.balloon{height:190px}.balloon-art{width:152px;height:188px}.balloon-label{height:130px}.title{font-size:2.8rem}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">镖</span><span>字音飞镖擂台</span></div>
+    <nav class="nav" aria-label="课件导航">
+      <button data-view="setup" class="active">赛前设置</button>
+      <button data-view="lesson">字音课堂</button>
+      <button data-view="game">双组PK</button>
+    </nav>
+  </header>
+  <main>
+    <section id="setup" class="view active">
+      <div class="setup-grid">
+        <div class="panel setup-config">
+          <div class="eyebrow">一年级华文 · 两班对抗赛</div>
+          <h1 class="title">瞄准<span class="accent">正确读音</span></h1>
+          <p class="lead">两个班级分别设置班级人数，再从号码表中移除缺席学生。系统随机抽取参赛号码，连续答对5题或生命用完时自动换人。</p>
+          <div class="class-settings">
+            <section class="class-box a">
+              <h3>左屏班级</h3>
+              <div class="field"><label for="teamAName">班级名称</label><input id="teamAName" value="一红班" maxlength="12"></div>
+              <div class="field"><label for="classTotalA">班级人数</label><input id="classTotalA" type="number" min="1" max="80" value="30"></div>
+            </section>
+            <section class="class-box b">
+              <h3>右屏班级</h3>
+              <div class="field"><label for="teamBName">班级名称</label><input id="teamBName" value="一蓝班" maxlength="12"></div>
+              <div class="field"><label for="classTotalB">班级人数</label><input id="classTotalB" type="number" min="1" max="80" value="30"></div>
+            </section>
+          </div>
+          <div class="field"><label for="gameMinutes">比赛时间</label><select id="gameMinutes"><option value="3">3分钟</option><option value="5" selected>5分钟</option><option value="8">8分钟</option><option value="10">10分钟</option></select></div>
+          <div class="actions"><button class="primary" id="saveSetup">保存并进入字音课堂</button><button class="secondary" id="quickGame">直接进入PK</button></div>
+        </div>
+        <div class="panel roster-panel a">
+          <div class="roster-head"><div><div class="eyebrow">左班号码</div><h2 id="rosterNameA">一红班</h2></div><strong id="presentCountA">30人参赛</strong></div>
+          <p class="roster-help">点击缺席学生的号码。灰色号码不会出现在比赛轮次中。</p>
+          <div class="numbers" id="numbersA" aria-label="左班学生号码"></div>
+          <div class="legend"><span><i class="dot"></i>到场</span><span><i class="dot abs"></i>缺席</span></div>
+        </div>
+        <div class="panel roster-panel b">
+          <div class="roster-head"><div><div class="eyebrow">右班号码</div><h2 id="rosterNameB">一蓝班</h2></div><strong id="presentCountB">30人参赛</strong></div>
+          <p class="roster-help">点击缺席学生的号码。灰色号码不会出现在比赛轮次中。</p>
+          <div class="numbers" id="numbersB" aria-label="右班学生号码"></div>
+          <div class="legend"><span><i class="dot"></i>到场</span><span><i class="dot abs"></i>缺席</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="lesson" class="view">
+      <div class="lesson-head"><div><div class="eyebrow">第一部分</div><h1>多音多义字学习站</h1></div><div class="progress-pill"><span id="lessonIndex">1</span> / 8</div></div>
+      <div class="lesson-layout">
+        <div class="char-tabs" id="charTabs"></div>
+        <div>
+          <article class="teach-card" id="teachCard"></article>
+          <div class="lesson-controls"><button class="secondary" id="prevChar">上一个</button><button class="primary" id="nextChar">下一个</button><button class="danger" id="toGame">开始双组PK</button></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="game" class="view">
+      <div class="game-shell">
+        <div class="scoreboard">
+          <div class="score-team"><span class="score-name" id="scoreNameA">闪电队</span><strong class="score" id="scoreA">0</strong></div>
+          <div class="clock"><div class="clock-label">剩余时间</div><div class="clock-value" id="clock">05:00</div></div>
+          <div class="score-team right"><span class="score-name" id="scoreNameB">火箭队</span><strong class="score" id="scoreB">0</strong></div>
+        </div>
+        <div class="arenas">
+          <section class="arena a" id="arenaA" aria-label="左组比赛区">
+            <div class="playerbar"><div class="player">选手 <span id="playerA">1号</span></div><div class="combo" id="comboA">连击 0/5</div><div class="lives" id="livesA" aria-label="三次生命">♥♥♥</div></div>
+            <div class="prompt"><div class="prompt-label">词语出现了！射中正确的拼音气球</div><div class="prompt-word" id="promptA">树干</div><div class="prompt-hint" id="hintA">树木的主体部分</div></div>
+            <div class="balloons" id="balloonsA"></div><div class="feedback" id="feedbackA"></div><span class="dart" id="dartA">➶</span>
+            <div class="team-pause show" id="pauseA"><div class="pause-card"><h3 id="pauseTitleA">1号准备</h3><p id="pauseTextA">每位同学有3次生命。准备好后点击开始。</p><button class="primary team-start" data-team="A">开始挑战</button></div></div>
+          </section>
+          <section class="arena b" id="arenaB" aria-label="右组比赛区">
+            <div class="playerbar"><div class="player">选手 <span id="playerB">1号</span></div><div class="combo" id="comboB">连击 0/5</div><div class="lives" id="livesB" aria-label="三次生命">♥♥♥</div></div>
+            <div class="prompt"><div class="prompt-label">词语出现了！射中正确的拼音气球</div><div class="prompt-word" id="promptB">干花</div><div class="prompt-hint" id="hintB">失去水分的花</div></div>
+            <div class="balloons" id="balloonsB"></div><div class="feedback" id="feedbackB"></div><span class="dart" id="dartB">➶</span>
+            <div class="team-pause show" id="pauseB"><div class="pause-card"><h3 id="pauseTitleB">2号准备</h3><p id="pauseTextB">每位同学有3次生命。准备好后点击开始。</p><button class="primary team-start" data-team="B">开始挑战</button></div></div>
+          </section>
+        </div>
+        <div class="teacher-dock">
+          <div><strong>老师控班台</strong><div class="small game-state" id="gameState">尚未开始计时</div></div>
+          <div class="teacher-actions"><button class="teacher-btn pause" id="classPause">暂停全场</button><button class="teacher-btn" data-deduct="A">左组 −5</button><button class="teacher-btn" data-deduct="B">右组 −5</button><button class="teacher-btn" id="resetGame">重新开局</button></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<div class="class-overlay" id="classOverlay"><div><div class="pause-icon">⏸</div><h2>全场暂停</h2><p>学生先看老师这里。计时已经停止。</p><button class="primary" id="resumeClass">继续游戏</button></div></div>
+<div class="winner" id="winner"><div><div class="trophy">🏆</div><h2 id="winnerTitle">比赛结束</h2><div class="winner-scores" id="winnerScores"></div><button class="primary" id="winnerReset">再来一局</button></div></div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+  const lessons=[
+    {char:'干',source:'课本第十二单元 · 第74页“比比说说”',readings:[{py:'gān',words:['干花'],meaning:'失去水分的花。这里的“干”表示没有水分。'},{py:'gàn',words:['树干'],meaning:'树木的主体部分。'}]},
+    {char:'看',source:'第十二单元教学提示点名；词例为教学补充',readings:[{py:'kàn',words:['看见','看书'],meaning:'用眼睛观察，或阅读。'},{py:'kān',words:['看门','看守'],meaning:'守护、照管。'}]},
+    {char:'还',source:'第十二单元教学提示点名；词例为教学补充',readings:[{py:'hái',words:['还有','还是'],meaning:'表示另外有，或仍然。'},{py:'huán',words:['还书','归还'],meaning:'把东西交回原主。'}]},
+    {char:'长',source:'第十二单元教学提示点名；词例为教学补充',readings:[{py:'cháng',words:['长短','很长'],meaning:'长度大，和“短”相对。'},{py:'zhǎng',words:['长大','生长'],meaning:'发育、成长。'}]},
+    {char:'种',source:'课本第十九单元 · 第127页“比比说说”',readings:[{py:'zhǒng',words:['各种','种子'],meaning:'表示种类，或植物的种子。'},{py:'zhòng',words:['种花','种树'],meaning:'把种子或植物栽进土里。'}]},
+    {char:'背',source:'课本第十九单元 · 第127页“比比说说”',readings:[{py:'bēi',words:['背书包'],meaning:'用背部负载东西。'},{py:'bèi',words:['背心','背影'],meaning:'和身体背部或物体背面有关。'}]},
+    {char:'只',source:'课本第二十一单元 · 第141页“读读说说”',readings:[{py:'zhī',words:['一只','两只狮子'],meaning:'用于动物等的量词。'},{py:'zhǐ',words:['只带一只'],meaning:'表示仅仅、只有。'}]},
+    {char:'觉',source:'课本第二十二单元 · 第149页“读读比比”',readings:[{py:'jiào',words:['睡觉'],meaning:'进入睡眠状态。'},{py:'jué',words:['觉得','感觉'],meaning:'感到或认为。'}]}
+  ];
+  const questions=lessons.flatMap(item=>item.readings.flatMap(r=>r.words.map(word=>({char:item.char,word,answer:r.py,hint:r.meaning,options:item.readings.map(x=>x.py)}))));
+  const state={view:'setup',minutes:5,remaining:300,running:false,classPaused:false,ended:false,lesson:0,
+    A:{name:'一红班',total:30,absent:new Set(),score:0,lives:3,combo:0,roster:[],rosterIndex:0,paused:true,q:null},
+    B:{name:'一蓝班',total:30,absent:new Set(),score:0,lives:3,combo:0,roster:[],rosterIndex:0,paused:true,q:null}};
+  let timer=null,toastTimer=null;
+  const $=id=>document.getElementById(id);
+  function showView(id){state.view=id;document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===id));if(id==='lesson')renderLesson();if(id==='game')renderGame();}
+  function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),1800)}
+  function renderRoster(team){const t=state[team],totalInput=$(`classTotal${team}`);t.total=Math.max(1,Math.min(80,Number(totalInput.value)||1));totalInput.value=t.total;[...t.absent].forEach(n=>{if(n>t.total)t.absent.delete(n)});const wrap=$(`numbers${team}`);wrap.innerHTML='';for(let n=1;n<=t.total;n++){const b=document.createElement('button');b.className='num'+(t.absent.has(n)?' absent':'');b.textContent=n;b.setAttribute('aria-pressed',t.absent.has(n));b.onclick=()=>{t.absent.has(n)?t.absent.delete(n):t.absent.add(n);renderRoster(team)};wrap.appendChild(b)}const present=t.total-t.absent.size;$(`presentCount${team}`).textContent=`${present}人参赛`;$(`rosterName${team}`).textContent=$(`team${team}Name`).value.trim()||`${team==='A'?'左':'右'}班`}
+  function saveSetup(){['A','B'].forEach(team=>{const t=state[team];t.name=$(`team${team}Name`).value.trim()||`${team==='A'?'左':'右'}班`;renderRoster(team);t.roster=Array.from({length:t.total},(_,i)=>i+1).filter(n=>!t.absent.has(n))});state.minutes=Number($('gameMinutes').value);state.remaining=state.minutes*60;if(!state.A.roster.length||!state.B.roster.length){toast('两个班级都需要至少一位到场学生');return false}resetGame(false);return true}
+  function renderLesson(){const tabs=$('charTabs');tabs.innerHTML='';lessons.forEach((l,i)=>{const b=document.createElement('button');b.className='char-tab'+(i===state.lesson?' active':'');b.textContent=`${l.char} ${l.readings.map(r=>r.py).join(' / ')}`;b.onclick=()=>{state.lesson=i;renderLesson()};tabs.appendChild(b)});const l=lessons[state.lesson];$('lessonIndex').textContent=state.lesson+1;$('teachCard').innerHTML=`<div class="big-char">${l.char}</div><div class="reading-grid">${l.readings.map(r=>`<section class="reading"><div class="pinyin">${r.py}</div><div class="words">${r.words.map(w=>`<span class="word">${w}</span>`).join('')}</div><div class="meaning">${r.meaning}</div></section>`).join('')}</div><div class="source-note">${l.source}</div>`}
+  function nextQuestion(team){const t=state[team];let q=questions[Math.floor(Math.random()*questions.length)];if(t.q&&questions.length>1){while(q.word===t.q.word)q=questions[Math.floor(Math.random()*questions.length)]}t.q=q;renderTeam(team)}
+  function renderTeam(team){const t=state[team],q=t.q||questions[0];$(`scoreName${team}`).textContent=t.name;$(`score${team}`).textContent=t.score;$(`player${team}`).textContent=`${t.roster[t.rosterIndex]??1}号`;$(`lives${team}`).textContent='♥'.repeat(t.lives)+'♡'.repeat(3-t.lives);$(`combo${team}`).textContent=`连击 ${t.combo}/5`;$(`prompt${team}`).textContent=q.word;$(`hint${team}`).textContent=q.hint;const options=[...q.options].sort(()=>Math.random()-.5);const wrap=$(`balloons${team}`);wrap.innerHTML='';options.forEach((py,i)=>{const b=document.createElement('button');b.className=`balloon pastel-${((i+(team==='A'?0:2))%4)+1}`;b.innerHTML=`<svg class="balloon-art" viewBox="0 0 180 220" aria-hidden="true"><ellipse cx="90" cy="82" rx="68" ry="76" fill="var(--balloon-fill)" stroke="var(--balloon-dark)" stroke-width="4"/><ellipse cx="66" cy="48" rx="16" ry="25" fill="#fff" opacity=".38"/><path d="M82 155 L98 155 L90 172 Z" fill="var(--balloon-dark)"/><path d="M90 171 C72 188 108 197 88 216" fill="none" stroke="var(--balloon-dark)" stroke-width="4" stroke-linecap="round"/></svg><span class="balloon-label">${py}</span><span class="burst-particles" aria-hidden="true">✦ · ✧ · ✦</span>`;b.setAttribute('aria-label',`${q.word}读${py}`);b.onclick=()=>shoot(team,py,b,i);wrap.appendChild(b)});$(`pause${team}`).classList.toggle('show',t.paused)}
+  function playTone(good){try{const c=new (window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.frequency.value=good?660:180;o.type=good?'sine':'sawtooth';g.gain.setValueAtTime(.08,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.2);o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.2)}catch(e){}}
+  function shoot(team,choice,button,index){const t=state[team];if(!state.running||state.classPaused||state.ended||t.paused)return;const good=choice===t.q.answer,fb=$(`feedback${team}`),dart=$(`dart${team}`);dart.className=`dart ${index===0?'fly-left':'fly-right'}`;setTimeout(()=>dart.className='dart',460);button.classList.add('pop');playTone(good);if(good){t.score+=10;t.combo++;if(t.combo>=5){fb.textContent='5连击 COMBO！+10分，换人！';fb.className='feedback good';setTimeout(()=>finishPlayer(team,'combo'),720)}else{fb.textContent=`命中！+10分 · 连击${t.combo}/5`;fb.className='feedback good';setTimeout(()=>nextQuestion(team),520)}}else{t.score=Math.max(0,t.score-2);t.lives--;t.combo=0;fb.textContent=`读音不对，答案是 ${t.q.answer}`;fb.className='feedback bad';if(t.lives<=0){setTimeout(()=>finishPlayer(team,'lives'),560)}else setTimeout(()=>nextQuestion(team),720)}$(`score${team}`).textContent=t.score;$(`lives${team}`).textContent='♥'.repeat(Math.max(0,t.lives))+'♡'.repeat(3-Math.max(0,t.lives));$(`combo${team}`).textContent=`连击 ${t.combo}/5`}
+  function chooseRandomPlayer(t){if(t.roster.length<=1){t.rosterIndex=0;return}const current=t.rosterIndex;let next=current;while(next===current)next=Math.floor(Math.random()*t.roster.length);t.rosterIndex=next}
+  function finishPlayer(team,reason){const t=state[team];t.paused=true;chooseRandomPlayer(t);t.lives=3;t.combo=0;const next=t.roster[t.rosterIndex];$(`pauseTitle${team}`).textContent=`随机抽中：${next}号`;$(`pauseText${team}`).textContent=reason==='combo'?'完成5连击！本组暂停，请抽中的同学上前点击“开始挑战”。':'3次生命已用完。本组暂停，请抽中的同学上前点击“开始挑战”。';renderTeam(team)}
+  function startTeam(team){if(state.ended)return;const t=state[team];t.paused=false;$(`pause${team}`).classList.remove('show');$(`feedback${team}`).textContent='';if(!state.running){state.running=true;$('gameState').textContent='比赛进行中';startTimer()}nextQuestion(team)}
+  function startTimer(){clearInterval(timer);timer=setInterval(()=>{if(!state.running||state.classPaused||state.ended)return;state.remaining--;renderClock();if(state.remaining<=0)endGame()},1000)}
+  function renderClock(){const m=Math.floor(state.remaining/60),s=state.remaining%60;$('clock').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`}
+  function renderGame(){renderClock();renderTeam('A');renderTeam('B');$('classOverlay').classList.toggle('show',state.classPaused);$('winner').classList.toggle('show',state.ended)}
+  function resetGame(goView=true){clearInterval(timer);state.remaining=state.minutes*60;state.running=false;state.classPaused=false;state.ended=false;['A','B'].forEach(team=>{const t=state[team];t.score=0;t.lives=3;t.combo=0;t.rosterIndex=t.roster.length?Math.floor(Math.random()*t.roster.length):0;t.paused=true;t.q=questions[Math.floor(Math.random()*questions.length)];$(`pauseTitle${team}`).textContent=`随机抽中：${t.roster[t.rosterIndex]??1}号`;$(`pauseText${team}`).textContent='每位同学有3次生命；连续答对5题也会自动换人。'});$('gameState').textContent='尚未开始计时';if(goView)showView('game');else renderGame()}
+  function toggleClassPause(force){if(state.ended)return;state.classPaused=typeof force==='boolean'?force:!state.classPaused;$('classOverlay').classList.toggle('show',state.classPaused);$('gameState').textContent=state.classPaused?'全场已暂停':'比赛进行中';$('classPause').textContent=state.classPaused?'继续全场':'暂停全场'}
+  function deduct(team){state[team].score=Math.max(0,state[team].score-5);$(`score${team}`).textContent=state[team].score;toast(`${state[team].name} 扣5分`)}
+  function endGame(){clearInterval(timer);state.remaining=0;state.running=false;state.ended=true;renderClock();const a=state.A.score,b=state.B.score;$('winnerTitle').textContent=a===b?'平局！':`${a>b?state.A.name:state.B.name}获胜！`;$('winnerScores').textContent=`${state.A.name} ${a} 分 · ${state.B.name} ${b} 分`;$('winner').classList.add('show');$('gameState').textContent='时间到，比赛结束'}
+  document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>showView(b.dataset.view));['A','B'].forEach(team=>{$(`classTotal${team}`).addEventListener('input',()=>renderRoster(team));$(`team${team}Name`).addEventListener('input',()=>renderRoster(team))});$('saveSetup').onclick=()=>{if(saveSetup())showView('lesson')};$('quickGame').onclick=()=>{if(saveSetup())showView('game')};$('prevChar').onclick=()=>{state.lesson=(state.lesson+lessons.length-1)%lessons.length;renderLesson()};$('nextChar').onclick=()=>{state.lesson=(state.lesson+1)%lessons.length;renderLesson()};$('toGame').onclick=()=>{if(saveSetup())showView('game')};document.querySelectorAll('.team-start').forEach(b=>b.onclick=()=>startTeam(b.dataset.team));$('classPause').onclick=()=>toggleClassPause();$('resumeClass').onclick=()=>toggleClassPause(false);document.querySelectorAll('[data-deduct]').forEach(b=>b.onclick=()=>deduct(b.dataset.deduct));$('resetGame').onclick=()=>resetGame();$('winnerReset').onclick=()=>{$('winner').classList.remove('show');resetGame()};
+  function registerWebMCP(){const ctx=document.modelContext;if(!ctx?.registerTool)return;const safeTeam=v=>{if(v!=='A'&&v!=='B')throw new Error('team必须是A或B');return v};try{ctx.registerTool({name:'configure_match',title:'设置两班比赛',description:'设置两个班级各自的名称、班级人数和比赛分钟数。',inputSchema:{type:'object',properties:{teamA:{type:'string'},teamATotal:{type:'integer',minimum:1,maximum:80},teamB:{type:'string'},teamBTotal:{type:'integer',minimum:1,maximum:80},minutes:{type:'integer',enum:[3,5,8,10]}},required:['teamA','teamATotal','teamB','teamBTotal','minutes'],additionalProperties:false},annotations:{readOnlyHint:false,untrustedContentHint:false},execute:({teamA,teamATotal,teamB,teamBTotal,minutes})=>{$('teamAName').value=teamA;$('classTotalA').value=teamATotal;$('teamBName').value=teamB;$('classTotalB').value=teamBTotal;$('gameMinutes').value=minutes;renderRoster('A');renderRoster('B');saveSetup();return{configured:true,teamA,teamATotal,teamB,teamBTotal,minutes}}});ctx.registerTool({name:'pause_class_match',title:'暂停或继续全场',description:'暂停或继续当前双班比赛，并同步更新老师控班画面。',inputSchema:{type:'object',properties:{paused:{type:'boolean'}},required:['paused'],additionalProperties:false},annotations:{readOnlyHint:false,untrustedContentHint:false},execute:({paused})=>{toggleClassPause(paused);return{paused:state.classPaused,remaining:state.remaining}}});ctx.registerTool({name:'deduct_team_score',title:'班级扣分',description:'从指定班级扣除5分，最低为0分。',inputSchema:{type:'object',properties:{team:{type:'string',enum:['A','B']}},required:['team'],additionalProperties:false},annotations:{readOnlyHint:false,untrustedContentHint:false},execute:({team})=>{team=safeTeam(team);deduct(team);return{team,score:state[team].score}}})}catch(e){console.warn('WebMCP registration unavailable',e)}}
+  renderRoster('A');renderRoster('B');renderLesson();state.A.roster=Array.from({length:30},(_,i)=>i+1);state.B.roster=Array.from({length:30},(_,i)=>i+1);resetGame(false);registerWebMCP();
+</script>
+</body>
+</html>
