@@ -1,0 +1,38 @@
+{
+  "method": "Built-in image_gen",
+  "style": "High-resolution educational flashcard, landscape 3:2, polished children's picture-book illustration, crisp clean outlines, gentle shading, clear time-of-day cue, no text, no numbers, no clocks, no watermark",
+  "scenes": [
+    {
+      "file": "ai-dawn.png",
+      "scene": "Dawn: a Chinese Malaysian primary school child waking up and stretching in bed, bedroom window clearly showing sunrise low on the horizon, pale pink and orange early morning sky."
+    },
+    {
+      "file": "ai-morning.png",
+      "scene": "Morning: two Chinese Malaysian primary school children jogging in a green park, bright fresh blue sky, morning sun moderately low above trees, energetic cheerful scene."
+    },
+    {
+      "file": "ai-noon.png",
+      "scene": "Noon: a Chinese Malaysian child and father walking outdoors on a sunny residential street, sun almost overhead in clear bright sky, very short shadows directly below them, midday warmth."
+    },
+    {
+      "file": "ai-afternoon.png",
+      "scene": "Afternoon: Chinese Malaysian primary school children playing a friendly outdoor game on a school field, sun distinctly away from overhead but still high, clear blue sky, bright daylight and moderate shadows."
+    },
+    {
+      "file": "ai-dusk.png",
+      "scene": "Dusk: a Chinese Malaysian child on a playground swing, glowing orange sun partly touching the horizon behind hills, peach-orange sunset sky, long shadows, clearly early evening before night."
+    },
+    {
+      "file": "ai-night.png",
+      "scene": "Night: a Chinese Malaysian mother and child eating dinner at home, warm indoor light, large window showing dark blue sky, crescent moon and a few stars, awake and enjoying dinner."
+    },
+    {
+      "file": "ai-midnight.png",
+      "scene": "Midnight: a Chinese Malaysian child asleep in bed, peaceful quiet bedroom with dim soft moonlight, window with deep dark navy sky and bright stars, everything still and asleep."
+    }
+  ],
+  "detectiveRoom": {
+    "file": "ai-detective-room.png",
+    "prompt": "Original child-friendly detective in a cozy blue/violet living room at night, sofa, window, bookshelf, glowing lamp, gold key, green folder and turquoise jewel. Polished dimensional cartoon game illustration, auburn-haired female detective with brown cap and coat, magnifying glass, no text/UI/logos."
+  }
+}

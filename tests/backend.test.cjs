@@ -15,3 +15,12 @@ const board=call('leaderboard',{unit:'单元7：空间',sessionToken:login.sessi
 const dashboard=ctx.getTeacherDashboard_();assert.equal(dashboard.students[0].spaceHard.score,600);assert.equal(dashboard.spaceGameLeaderboard[0].score,1000);assert.equal(dashboard.unitStats.unit7.easyCompleted,2);assert.equal(dashboard.unitStats.unit7.gameAverage,800);assert.equal(dashboard.students[0].easy.score,100);
 const legacy=sheets.get('Scores').data.map(r=>r.slice());ctx.setupUnit7();assert.deepEqual(sheets.get('Scores').data,legacy);assert.equal(sheets.get('Unit7Scores').data[0].length,16);assert.equal(call('teacherDashboard',{teacherToken:'invalid'}).error,'teacher_session_invalid');
 console.log('PASS: class choices, name matching, signed selections, session validation, isolated Unit 7 records, uncapped coins, best per difficulty, class leaderboard, teacher dashboard, preserved legacy records.');
+const legacyBeforeTime=sheets.get('Scores').data.filter(r=>r[4]==='单元3：分数').map(r=>r.slice());
+for(const [difficulty,score] of [['简单',80],['中等',90],['困难',100]]){const response=save({unit:'单元5：时间与时刻',activity:'配对游戏',difficulty,score});assert(response.saved);assert.equal(response.unit,'单元5：时间与时刻');}
+assert.equal(save({unit:'单元5：时间与时刻',activity:'配对游戏',difficulty:'简单',score:60}).saved,false);
+assert(save({unit:'单元5：时间与时刻',activity:'离堂小检核',difficulty:'综合',score:75}).saved);
+save({unit:'单元5：时间与时刻',activity:'配对游戏',difficulty:'简单',score:100},'3');
+const timeBoard=call('leaderboard',{unit:'单元5：时间与时刻',sessionToken:login.sessionToken});assert.equal(timeBoard.unit,'单元5：时间与时刻');assert.equal(timeBoard.gameLeaderboard.length,1);assert.equal(timeBoard.gameLeaderboard[0].score,93);assert.equal(timeBoard.ticketLeaderboard[0].score,75);
+const timeDashboard=ctx.getTeacherDashboard_();assert.equal(timeDashboard.students[0].timeHard.score,100);assert.equal(timeDashboard.students[0].timeTicket.score,75);assert.equal(timeDashboard.unitStats.unit5.easyCompleted,2);assert.equal(timeDashboard.timeGameLeaderboard[0].score,93);assert.equal(timeDashboard.timeTicketLeaderboard[0].score,75);
+assert.deepEqual(sheets.get('Scores').data.filter(r=>r[4]==='单元3：分数'),legacyBeforeTime);
+console.log('PASS: Unit 5 saves, weighted ranking, class isolation, highest scores, teacher overview and preserved existing scores.');

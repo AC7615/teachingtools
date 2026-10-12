@@ -1,0 +1,7 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+let notes=[];const handlers={},elements=new Map();function el(){return{classList:{remove(){},add(){}},setAttribute(){},offsetWidth:10};}const document={addEventListener:(type,fn)=>handlers[type]=fn,getElementById:id=>{if(!elements.has(id))elements.set(id,el());return elements.get(id)}};
+class AudioContext{constructor(){this.currentTime=0;this.destination={};}resume(){return Promise.resolve();}createGain(){return{gain:{setValueAtTime(){},linearRampToValueAtTime(){},exponentialRampToValueAtTime(){}},connect(){}};}createOscillator(){const note={};notes.push(note);return{set type(v){note.type=v;},frequency:{setValueAtTime:f=>note.frequency=f,exponentialRampToValueAtTime:f=>note.slide=f},connect(){},start:t=>note.start=t,stop:t=>note.stop=t};}}
+const context={document,window:{AudioContext}};vm.createContext(context);vm.runInContext(fs.readFileSync('units/unit5-effects.js','utf8'),context);
+function sound(kind){notes=[];vm.runInContext(`TimeFX.sound('${kind}')`,context);return JSON.stringify(notes);}
+const right=sound('correct'),wrong=sound('wrong'),clue=sound('clue');assert.notEqual(right,wrong);assert.notEqual(right,clue);assert.notEqual(wrong,clue);assert(wrong.includes('triangle'));assert(clue.includes('2093'));
+elements.get('soundToggle').onclick({currentTarget:elements.get('soundToggle')});assert.equal(sound('correct'),'[]');console.log('PASS: distinct correct, wrong and clue cues; wrong has a falling buzz; mute prevents playback.');

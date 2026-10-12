@@ -1,7 +1,8 @@
 (function(){
 const unitGroups=[
   {key:"unit3",label:"单元3",units:["单元3：分数"]},
-  {key:"unit4",label:"单元4",units:["单元4：纸币和硬币","单元4：经济来源和储蓄"]}
+  {key:"unit4",label:"单元4",units:["单元4：纸币和硬币","单元4：经济来源和储蓄"]},
+  {key:"unit5",label:"单元5",units:["单元5：时间与时刻"]}
 ];
 const cache=new Map();
 async function post(apiUrl,payload){const response=await fetch(apiUrl,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload)});if(!response.ok)throw new Error("network");const data=await response.json();if(data.error)throw new Error(data.error);return data}
@@ -24,5 +25,5 @@ async function calculate(apiUrl,sessionToken,force=false){
   })();
   cache.set(cacheKey,promise);try{return await promise}catch(error){cache.delete(cacheKey);throw error}
 }
-window.OverallRanking={calculate,unitGroups};
+window.OverallRanking={calculate,unitGroups,invalidate:(apiUrl,sessionToken)=>cache.delete(`${apiUrl}|${sessionToken}`)};
 })();

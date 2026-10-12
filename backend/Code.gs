@@ -95,7 +95,7 @@ function getLegacyScoresSheet_() {
 
 /** GET 只提供健康检查，不公开名单、姓名或排行榜。 */
 function doGet() {
-  return jsonOutput({ ok: true, service: 'year1-math-score-api', version: 4 });
+  return jsonOutput({ ok: true, service: 'year1-math-score-api', version: 5, units:['单元3：分数','单元4：纸币和硬币','单元4：经济来源和储蓄','单元5：时间与时刻','单元7：空间'] });
 }
 
 function doPost(e) {
@@ -223,7 +223,7 @@ function saveBestResult_(data, studentNo) {
       saved = true;
     }
   }
-  return { ok: true, saved: saved, score: score };
+  return { ok: true, saved: saved, score: score, unit:unit };
 }
 
 function findStudent_(no) {
@@ -283,7 +283,7 @@ function getTeacherDashboard_() {
       studentNo: String(r[0]).trim(), chineseName: String(r[1] || ''),
       englishName: String(r[2] || ''), className: String(r[3] || ''),
       easy: null, medium: null, hard: null, ticket: null,
-      moneyEasy: null, moneyMedium: null, moneyHard: null, moneyTicket: null, spaceEasy:null, spaceMedium:null, spaceHard:null, spaceTicket:null, lastActive: ''
+      moneyEasy: null, moneyMedium: null, moneyHard: null, moneyTicket: null, timeEasy:null, timeMedium:null, timeHard:null, timeTicket:null, spaceEasy:null, spaceMedium:null, spaceHard:null, spaceTicket:null, lastActive: ''
     }));
   const byNo = {};
   roster.forEach(student => { byNo[student.studentNo] = student; });
@@ -307,6 +307,7 @@ function getTeacherDashboard_() {
       student[moneyKey] = entry;
     }
     if (unit.indexOf('单元4：')===0 && activity === '离堂小检核') student.moneyTicket = entry;
+    if(unit==='单元5：时间与时刻'){const key=activity==='离堂小检核'?'timeTicket':activity==='配对游戏'&&difficultyKeys[difficulty]?'time'+difficultyKeys[difficulty].charAt(0).toUpperCase()+difficultyKeys[difficulty].slice(1):null;if(key&&(!student[key]||entry.score>student[key].score||(entry.score===student[key].score&&entry.duration<student[key].duration)))student[key]=entry;}
     if(unit==='单元7：空间') {const key=activity==='离堂小检核'?'spaceTicket':activity==='硬币闯关'&&difficultyKeys[difficulty]?'space'+difficultyKeys[difficulty].charAt(0).toUpperCase()+difficultyKeys[difficulty].slice(1):null;if(key&&(!student[key]||entry.score>student[key].score))student[key]=entry;}
     if (!student.lastActive || updatedAt > student.lastActive) student.lastActive = updatedAt;
     recent.push({
@@ -325,6 +326,7 @@ function getTeacherDashboard_() {
   const leaderboards = getLeaderboards_('单元3：分数');
   const moneyLeaderboards = getLeaderboards_('单元4：钱币');
   const spaceLeaderboards = getLeaderboards_('单元7：空间');
+  const timeLeaderboards = getLeaderboards_('单元5：时间与时刻');
   const unitStats=prefix=>({totalStudents:roster.length,activeStudents:roster.filter(s=>['Easy','Medium','Hard','Ticket'].some(k=>s[prefix+k])).length,easyCompleted:completed(prefix+'Easy'),mediumCompleted:completed(prefix+'Medium'),hardCompleted:completed(prefix+'Hard'),ticketCompleted:completed(prefix+'Ticket'),gameAverage:prefix==='space'?Math.round(roster.reduce((sum,s)=>sum+Math.max(...['Easy','Medium','Hard'].map(k=>s[prefix+k]?.score||0)),0)/(roster.filter(s=>['Easy','Medium','Hard'].some(k=>s[prefix+k])).length||1)):Math.round(average(prefix+'Easy')*.2+average(prefix+'Medium')*.3+average(prefix+'Hard')*.5),ticketAverage:average(prefix+'Ticket')});
   return {
     ok: true,
@@ -335,13 +337,14 @@ function getTeacherDashboard_() {
       ticketCompleted: completed('ticket'), gameAverage: Math.round((average('easy') * .2) + (average('medium') * .3) + (average('hard') * .5)),
       ticketAverage: average('ticket')
     },
-    unitStats:{unit4:unitStats('money'),unit7:unitStats('space')},
+    unitStats:{unit4:unitStats('money'),unit5:unitStats('time'),unit7:unitStats('space')},
     students: roster,
     recent: recent,
     gameLeaderboard: leaderboards.gameLeaderboard,
     ticketLeaderboard: leaderboards.ticketLeaderboard,
     moneyGameLeaderboard: moneyLeaderboards.gameLeaderboard,
     moneyTicketLeaderboard: moneyLeaderboards.ticketLeaderboard,
+    timeGameLeaderboard:timeLeaderboards.gameLeaderboard,timeTicketLeaderboard:timeLeaderboards.ticketLeaderboard,
     spaceGameLeaderboard:spaceLeaderboards.gameLeaderboard,spaceTicketLeaderboard:spaceLeaderboards.ticketLeaderboard
   };
 }
@@ -383,7 +386,7 @@ function getLeaderboards_(unit, className) {
   const ticketLeaderboard = Array.from(ticketByStudent.values())
     .sort((a,b) => b.score-a.score || a.duration-b.duration || a.name.localeCompare(b.name,'zh'))
     .map((r,i) => ({ rank:i+1, name:r.name, score:r.score }));
-  return { gameLeaderboard: gameLeaderboard, ticketLeaderboard: ticketLeaderboard, leaderboard: gameLeaderboard };
+  return { unit:unit, gameLeaderboard: gameLeaderboard, ticketLeaderboard: ticketLeaderboard, leaderboard: gameLeaderboard };
 }
 
 function getSessionSecret_() {
@@ -393,7 +396,7 @@ function getSessionSecret_() {
   return secret;
 }
 function normalizeClassCode_(value) { return String(value || '').trim().toUpperCase().replace(/\s+/g, ''); }
-function normalizeUnit_(value) { if(['单元7：空间','单元7：空间硬币闯关'].indexOf(String(value))>=0)return '单元7：空间';return safeChoice_(value,['单元3：分数','单元4：钱币','单元4：纸币和硬币','单元4：经济来源和储蓄'],'单元3：分数'); }
+function normalizeUnit_(value) { if(['单元7：空间','单元7：空间硬币闯关'].indexOf(String(value))>=0)return '单元7：空间';return safeChoice_(value,['单元3：分数','单元4：钱币','单元4：纸币和硬币','单元4：经济来源和储蓄','单元5：时间与时刻'],'单元3：分数'); }
 function hashClassCode_(code) { return sign_('class-code:' + normalizeClassCode_(code)); }
 function hashTeacherPassword_(password) { return sign_('teacher-password:' + String(password || '')); }
 function sign_(value) { return Utilities.base64EncodeWebSafe(Utilities.computeHmacSha256Signature(String(value), getSessionSecret_())).replace(/=+$/g, ''); }

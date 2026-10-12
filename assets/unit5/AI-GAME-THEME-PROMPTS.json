@@ -1,0 +1,21 @@
+{
+  "method": "Built-in image_gen",
+  "themes": [
+    {
+      "file": "ai-western.png",
+      "prompt": "Original landscape 3:2 polished dimensional cartoon illustration for a primary school educational matching puzzle game. A friendly young auburn-haired female detective dressed as a cowgirl in a warm sunny western town with sheriff office porch, wooden storefronts, sandy street, horseshoe, cowboy hat and saddle props, cream and caramel palette. Rich high quality soft dimensional lighting, crisp readable large shapes, inviting playful child-friendly setting, generous scene space on left, cohesive charming cartoon aesthetic. No text, no UI, no letters, no numbers, no logos or watermark."
+    },
+    {
+      "file": "ai-party.png",
+      "prompt": "Original landscape 3:2 polished dimensional cartoon illustration for a primary school educational matching puzzle game. A magical cheerful pastel pink and lavender garden pool party at twilight, floral arch, balloons, pink flamingo pool floats, cupcakes, wrapped presents, festive lights, friendly auburn-haired girl detective at right third with magnifying glass. Rich high quality soft dimensional lighting, crisp readable large shapes, inviting playful child-friendly setting, generous scene space on left, cohesive charming cartoon aesthetic. No text, no UI, no letters, no numbers, no logos or watermark."
+    },
+    {
+      "file": "ai-cleaning.png",
+      "prompt": "Original landscape 3:2 polished dimensional cartoon illustration for a primary school educational matching puzzle game. A sunny mint turquoise and golden yellow cozy children's bedroom, neatly made bed, plants, bright window, friendly auburn-haired girl detective at right third holding a broom, cleaning bucket, folded cloths and toy boxes. Rich high quality soft dimensional lighting, crisp readable large shapes, inviting playful child-friendly setting, generous scene space on left, cohesive charming cartoon aesthetic. No text, no UI, no letters, no numbers, no logos or watermark."
+    },
+    {
+      "file": "ai-jungle.png",
+      "prompt": "Original landscape 3:2 polished dimensional cartoon illustration for a primary school educational matching puzzle game. A lush emerald jungle adventure with ancient golden temple door decorated by green vines and spiral motif, explorer girl with auburn hair, brown safari hat and backpack at right third holding a map, wooden chest and compass foreground, coral and gold highlights. Rich high quality soft dimensional lighting, crisp readable large shapes, inviting playful child-friendly setting, generous scene space on left, cohesive charming cartoon aesthetic. No text, no UI, no letters, no numbers, no logos or watermark."
+    }
+  ]
+}
