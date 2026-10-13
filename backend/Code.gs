@@ -158,8 +158,13 @@ function loginStudent_(data) {
 }
 
 function rosterRows_() {
+  // Cache the roster briefly so class and name lookups avoid repeated Sheet reads.
+  const cache=typeof CacheService!=='undefined'?CacheService.getScriptCache():null;
+  if(cache){const saved=cache.get('roster-v1');if(saved)try{return JSON.parse(saved)}catch(_){}}
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(STUDENTS_SHEET);
-  return sheet && sheet.getLastRow()>1 ? sheet.getRange(2,1,sheet.getLastRow()-1,4).getDisplayValues().filter(r=>String(r[0]).trim()) : [];
+  const rows=sheet && sheet.getLastRow()>1 ? sheet.getRange(2,1,sheet.getLastRow()-1,4).getDisplayValues().filter(r=>String(r[0]).trim()) : [];
+  if(cache)try{cache.put('roster-v1',JSON.stringify(rows),60)}catch(_){}
+  return rows;
 }
 function getClassChoices_() {
   return {ok:true,classes:Array.from(new Set(rosterRows_().map(r=>String(r[3]).trim()).filter(Boolean))).sort().map(name=>({id:name,label:name}))};
@@ -389,10 +394,13 @@ function getLeaderboards_(unit, className) {
   return { unit:unit, gameLeaderboard: gameLeaderboard, ticketLeaderboard: ticketLeaderboard, leaderboard: gameLeaderboard };
 }
 
+let sessionSecretMemory_=null;
 function getSessionSecret_() {
+  if(sessionSecretMemory_)return sessionSecretMemory_;
   const properties = PropertiesService.getScriptProperties();
   let secret = properties.getProperty('SESSION_SECRET');
   if (!secret) { secret = Utilities.getUuid() + Utilities.getUuid(); properties.setProperty('SESSION_SECRET', secret); }
+  sessionSecretMemory_=secret;
   return secret;
 }
 function normalizeClassCode_(value) { return String(value || '').trim().toUpperCase().replace(/\s+/g, ''); }

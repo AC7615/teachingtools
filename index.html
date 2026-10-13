@@ -16,6 +16,8 @@
 .overall-table{min-width:0}
 @media(max-width:680px){.hero{grid-template-columns:1fr}.hero-art{display:none}.units,.access-choice,.class-form{grid-template-columns:1fr}.app{padding:14px 12px 35px}}
 .class-form{grid-template-columns:140px minmax(0,1fr) auto}.field select{font:inherit;width:100%;border:2px solid #d9dce7;border-radius:11px;padding:10px;background:white;color:var(--ink);min-height:44px}.name-field{position:relative}.student-choices{position:absolute;z-index:5;top:100%;left:0;right:0;background:white;border:2px solid var(--purple);border-radius:12px;max-height:260px;overflow:auto;box-shadow:var(--shadow);margin-top:4px}.student-choices button{display:block;text-align:left;width:100%;padding:12px;border:0;background:white;font:inherit;font-weight:800;cursor:pointer;color:var(--ink)}.student-choices button:hover,.student-choices button[aria-selected="true"]{background:#eef0ff}.student-choices p{margin:0;padding:12px;font-size:14px;color:var(--muted)}.login-btn:disabled{opacity:.55;cursor:default}@media(max-width:540px){.class-form{grid-template-columns:1fr}.student-choices{max-height:220px}}
+
+.access-dialog{width:min(640px,calc(100% - 28px));max-height:90vh;overflow:auto;border:0;border-radius:24px;padding:22px;color:var(--ink);box-shadow:0 20px 90px #17254955}.access-dialog::backdrop{background:#17254999;backdrop-filter:blur(4px)}.access-dialog h2{margin:0 0 16px;text-align:center}.access-dialog .access{margin:0;border:0;padding:0;box-shadow:none}.current-access{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:16px 0}.current-access button{border:0;border-radius:12px;padding:10px 14px;font:inherit;cursor:pointer;background:#eef0ff;color:#5055c4}.session-status[aria-busy="true"]{animation:loginPulse 1s ease-in-out infinite}@keyframes loginPulse{50%{opacity:.55}}
 </style>
 </head>
 <body>
@@ -24,11 +26,13 @@
     <div><div class="eyebrow">🌱 小步学习 · 快乐练习</div><h1>一年级数学互动学习</h1><p>选择一个单元，使用图片闪卡、互动游戏和离堂小检核学习数学词汇。</p></div>
     <div class="hero-art" aria-hidden="true">🍉</div>
   </section>
-  <section class="access" aria-label="选择使用方式">
-    <div class="access-choice"><button class="access-btn active" type="button" data-access="public">🌍 公开练习<small>不登录 · 不记录成绩</small></button><button class="access-btn" type="button" data-access="class">🏫 班级登录<small>记录最高成绩 · 查看排行榜</small></button></div>
+  <dialog id="accessDialog" class="access-dialog" aria-labelledby="accessTitle"><h2 id="accessTitle">选择学习方式</h2><section class="access" aria-label="选择使用方式">
+    <div class="access-choice"><button class="access-btn active" type="button" data-access="public">🌍 访客模式<small>不登录 · 不记录成绩</small></button><button class="access-btn" type="button" data-access="class">🏫 班级登录<small>记录最高成绩 · 查看排行榜</small></button></div>
     <form class="class-form hidden" id="classForm"><div class="field"><label for="className">班级</label><select id="className" required><option value="">正在读取班级…</option></select></div><div class="field name-field"><label for="englishName">英文名字</label><input id="englishName" role="combobox" aria-autocomplete="list" aria-controls="studentChoices" aria-expanded="false" autocomplete="off" maxlength="80" placeholder="输入字母，再选择你的名字" disabled><div id="studentChoices" class="student-choices hidden" role="listbox" aria-label="匹配的学生"></div></div><button class="login-btn" id="loginBtn" disabled>登录</button></form>
     <div class="session-row"><div class="session-status" id="sessionStatus">🌍 公开练习｜成绩不记录</div><button class="logout-btn hidden" id="logoutBtn" type="button">退出班级</button></div>
   </section>
+  </dialog><div class="current-access"><span id="currentAccess"></span><button id="changeAccess" type="button">切换学习方式</button></div>
+  <div id="catalog" class="hidden">
   <section class="overall hidden" id="overallLeaderboard" aria-label="全部单元综合排行榜"><div class="overall-head"><div><h2>🏆 全部单元综合排行榜</h2></div><button class="refresh" id="refreshOverall" type="button">↻ 更新</button></div><div class="overall-status" id="overallStatus">正在读取排行榜…</div><div class="table-wrap hidden" id="overallTableWrap"><table class="overall-table"><thead><tr><th>综合排名</th><th>学生</th><th>综合分</th></tr></thead><tbody id="overallBody"></tbody></table></div></section>
   <h2 class="section-title">选择学习单元</h2>
   <section class="units" aria-label="数学学习单元">
@@ -41,6 +45,7 @@
     <a class="unit ready" href="units/unit7-space.html"><div class="unit-icon">🔷</div><div><h2>单元 7｜空间</h2><div class="status">现在开始 →</div></div></a>
     <div class="unit soon"><div class="unit-icon">📊</div><div><h2>单元 8｜数据处理</h2><p>象形统计图</p><div class="status">准备中</div></div></div>
   </section>
+  </div>
   <div class="privacy">🔒 可选择公开练习或班级登录；学生名单只由班级后台查找</div>
   <a class="teacher-link" href="teacher/index.html">📊 教师后台</a>
 </main>
@@ -50,11 +55,13 @@ const API_URL="https://script.google.com/macros/s/AKfycbywytTHCDjJnRskGaP-Ls2Q4X
 function readSession(){try{const saved=JSON.parse(sessionStorage.getItem(SESSION_KEY)||"null");if(saved)return saved}catch(_){}try{return window.name.startsWith(`${SESSION_KEY}:`)?JSON.parse(window.name.slice(SESSION_KEY.length+1)):null}catch(_){return null}}
 function writeSession(value){const text=JSON.stringify(value);try{sessionStorage.setItem(SESSION_KEY,text)}catch(_){}window.name=`${SESSION_KEY}:${text}`}
 function escapeHTML(value){return String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[char]))}
-async function loadOverallLeaderboard(force=false){const session=readSession(),status=document.getElementById("overallStatus"),wrap=document.getElementById("overallTableWrap");wrap.classList.add("hidden");status.classList.remove("hidden");status.textContent="正在读取排行榜…";if(session?.mode!=="class"||!session.sessionToken){status.textContent="请先完成班级登录";return}try{const data=await OverallRanking.calculate(API_URL,session.sessionToken,force);document.getElementById("overallBody").innerHTML=data.rows.map(row=>`<tr><td>${row.rank<=3?["🥇","🥈","🥉"][row.rank-1]:row.rank}</td><td>${escapeHTML(row.name)}</td><td>${row.average}</td></tr>`).join("");if(data.rows.length){status.classList.add("hidden");wrap.classList.remove("hidden")}else status.textContent="还没有班级成绩"}catch(_){status.textContent="暂时无法读取排行榜"}}
-function showSession(data){const isClass=data?.mode==="class"&&data.sessionToken&&data.student;document.querySelectorAll("[data-access]").forEach(x=>x.classList.toggle("active",x.dataset.access===(isClass?"class":"public")));document.getElementById("classForm").classList.add("hidden");document.getElementById("logoutBtn").classList.toggle("hidden",!isClass);document.getElementById("overallLeaderboard").classList.toggle("hidden",!isClass);document.getElementById("sessionStatus").textContent=isClass?`✅ ${data.student.cn}｜${data.student.en}`:"🌍 公开练习｜成绩不记录";if(isClass)loadOverallLeaderboard()}
+let overallLoading=false;
+async function loadOverallLeaderboard(force=false){if(overallLoading)return;overallLoading=true;const session=readSession(),status=document.getElementById("overallStatus"),wrap=document.getElementById("overallTableWrap");if(!document.getElementById("overallBody").children.length){wrap.classList.add("hidden");status.classList.remove("hidden");status.textContent="正在读取排行榜…";}if(session?.mode!=="class"||!session.sessionToken){status.textContent="请先完成班级登录";overallLoading=false;return}try{const data=await OverallRanking.calculate(API_URL,session.sessionToken,force);document.getElementById("overallBody").innerHTML=data.rows.map(row=>`<tr><td>${row.rank<=3?["🥇","🥈","🥉"][row.rank-1]:row.rank}</td><td>${escapeHTML(row.name)}</td><td>${row.average}</td></tr>`).join("");if(data.rows.length){status.classList.add("hidden");wrap.classList.remove("hidden")}else status.textContent="还没有班级成绩"}catch(_){status.classList.remove("hidden");status.textContent="暂时无法更新，稍后自动重试"}finally{overallLoading=false}}
+function showSession(data){if(data?.mode){document.getElementById("catalog").classList.remove("hidden");document.getElementById("accessDialog").close();document.getElementById("currentAccess").textContent=data.mode==="class"?"✅ "+data.student.cn+"｜"+data.student.en:"🌍 访客模式｜成绩不记录";}const isClass=data?.mode==="class"&&data.sessionToken&&data.student;document.querySelectorAll("[data-access]").forEach(x=>x.classList.toggle("active",x.dataset.access===(isClass?"class":"public")));document.getElementById("classForm").classList.add("hidden");document.getElementById("logoutBtn").classList.toggle("hidden",!isClass);document.getElementById("overallLeaderboard").classList.toggle("hidden",!isClass);document.getElementById("sessionStatus").textContent=isClass?`✅ ${data.student.cn}｜${data.student.en}`:"🌍 公开练习｜成绩不记录";if(isClass)loadOverallLeaderboard()}
 document.querySelector('[data-access="public"]').onclick=()=>{const data={mode:"public"};writeSession(data);showSession(data)};
-document.getElementById("logoutBtn").onclick=()=>document.querySelector('[data-access="public"]').click();showSession(readSession()||{mode:"public"});if(!readSession())writeSession({mode:"public"});
+document.getElementById("logoutBtn").onclick=()=>document.querySelector('[data-access="public"]').click();showSession(null);document.getElementById("accessDialog").showModal();document.getElementById("accessDialog").oncancel=e=>e.preventDefault();document.getElementById("changeAccess").onclick=()=>document.getElementById("accessDialog").showModal();
 document.getElementById("refreshOverall").onclick=()=>loadOverallLeaderboard(true);
+setInterval(()=>{if(document.visibilityState==='visible'&&!document.getElementById("catalog").classList.contains("hidden")&&readSession()?.mode==='class')loadOverallLeaderboard(true)},15000);
 </script>
 <script src="class-login.js"></script>
 </body>
