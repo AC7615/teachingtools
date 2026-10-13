@@ -78,3 +78,5 @@ body[data-group="0"] [data-panel="review"]{display:none}@media(min-width:900px) 
 @media(min-width:700px){#detectiveGame{grid-template-columns:minmax(0,1fr) minmax(0,1.12fr);grid-template-areas:"scene board" "evidence evidence" "message reset"}.case-evidence{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:3px 8px}.case-evidence>div{margin:0}.case-evidence>p{grid-column:1/-1;line-height:1.5;margin:0}}
 @media(min-width:700px) and (max-width:899px){#detectiveGame{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr)}}
 .room-clue{transform:translate(-50%,-50%)}
+
+.flash-copy{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;width:100%;text-align:center}.flash-copy>span{display:block}.flash-copy .pinyin:empty{display:none}@media(min-width:900px){.flash>.flash-copy{grid-column:2;grid-row:1/5;align-self:stretch;justify-self:center}}
