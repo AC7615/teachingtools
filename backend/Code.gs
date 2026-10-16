@@ -95,7 +95,7 @@ function getLegacyScoresSheet_() {
 
 /** GET 只提供健康检查，不公开名单、姓名或排行榜。 */
 function doGet() {
-  return jsonOutput({ ok: true, service: 'year1-math-score-api', version: 6, units:['单元3：分数','单元4：纸币和硬币','单元4：经济来源和储蓄','单元5：时间与时刻','单元6：度量衡','单元7：空间'] });
+  return jsonOutput({ ok: true, service: 'year1-math-score-api', version: 7, units:['单元3：分数','单元4：纸币和硬币','单元4：经济来源和储蓄','单元5：时间与时刻','单元6：度量衡','单元7：空间'] });
 }
 
 function doPost(e) {
@@ -198,10 +198,10 @@ function saveBestResult_(data, studentNo) {
   const student = findStudent_(studentNo);
   if (!student) return { error: 'student_not_found', saved: false };
   const unit = normalizeUnit_(data.unit);
-  const activity = safeChoice_(data.activity, unit==='单元7：空间'?['硬币闯关','离堂小检核']:['配对游戏','离堂小检核'], unit==='单元7：空间'?'硬币闯关':'配对游戏');
-  const isCoins=unit==='单元7：空间' && activity==='硬币闯关', numeric=Number(data.score);
+  const activity = safeChoice_(data.activity, unit==='单元7：空间'?['硬币闯关','离堂小检核']:unit==='单元6：度量衡'?['叠塔挑战','配对游戏','离堂小检核']:['配对游戏','离堂小检核'], unit==='单元7：空间'?'硬币闯关':'配对游戏');
+  const isCoins=unit==='单元7：空间' && activity==='硬币闯关', isTower=unit==='单元6：度量衡'&&activity==='叠塔挑战', numeric=Number(data.score);
   if(!Number.isFinite(numeric) || numeric<0 || !Number.isSafeInteger(Math.round(numeric))) return {error:'score_invalid',saved:false};
-  const score = Math.max(0, Math.min(isCoins?Number.MAX_SAFE_INTEGER:100, Math.round(numeric)));
+  const score = Math.max(0, Math.min(isCoins||isTower?Number.MAX_SAFE_INTEGER:100, Math.round(numeric)));
   const duration = Math.max(0, Math.round(Number(data.durationSeconds) || 0));
   const difficulty = safeChoice_(data.difficulty, ['简单','中等','困难','综合'], '综合');
   const row = [new Date(), student.studentNo, student.chineseName, student.englishName, unit, activity, difficulty,
@@ -367,7 +367,7 @@ function getLeaderboards_(unit, className) {
     if(unit==='单元4：钱币'?String(r[4]).indexOf('单元4：')!==0:normalizeUnit_(r[4])!==unit)return;
     const studentNo = String(r[1]), name = String(r[2]), activity = String(r[5]);
     const difficulty = String(r[6]), score = Number(r[8]) || 0, duration = Number(r[11]) || 0;
-    if ((activity === '配对游戏'||activity==='硬币闯关') && difficultyKeys[difficulty]) {
+    if ((unit==='单元6：度量衡'?activity==='叠塔挑战':(activity==='配对游戏'||activity==='硬币闯关')) && difficultyKeys[difficulty]) {
       if (!gameByStudent.has(studentNo)) gameByStudent.set(studentNo, { name: name, easy: null, medium: null, hard: null });
       const student = gameByStudent.get(studentNo), key = difficultyKeys[difficulty], old = student[key];
       if (!old || score > old.score || (score === old.score && (old.duration === 0 || duration < old.duration))) student[key] = { score: score, duration: duration };
@@ -382,7 +382,7 @@ function getLeaderboards_(unit, className) {
     const easy = student.easy ? student.easy.score : null;
     const medium = student.medium ? student.medium.score : null;
     const hard = student.hard ? student.hard.score : null;
-    const score = unit==='单元7：空间'?Math.max(easy||0,medium||0,hard||0):Math.round((easy || 0) * .2 + (medium || 0) * .3 + (hard || 0) * .5);
+    const score = (unit==='单元7：空间'||unit==='单元6：度量衡')?Math.max(easy||0,medium||0,hard||0):Math.round((easy || 0) * .2 + (medium || 0) * .3 + (hard || 0) * .5);
     const duration = ['easy','medium','hard'].reduce((sum, key) => sum + (student[key] ? student[key].duration : 0), 0);
     return { name: student.name, score: score, easy: easy, medium: medium, hard: hard, duration: duration };
   }).sort((a,b) => b.score-a.score || a.duration-b.duration || a.name.localeCompare(b.name,'zh'))
@@ -391,7 +391,7 @@ function getLeaderboards_(unit, className) {
   const ticketLeaderboard = Array.from(ticketByStudent.values())
     .sort((a,b) => b.score-a.score || a.duration-b.duration || a.name.localeCompare(b.name,'zh'))
     .map((r,i) => ({ rank:i+1, name:r.name, score:r.score }));
-  return { unit:unit, gameLeaderboard: gameLeaderboard, ticketLeaderboard: ticketLeaderboard, leaderboard: gameLeaderboard };
+  return { unit:unit, scoreType:unit==='单元6：度量衡'?'height':'percent', gameLeaderboard: gameLeaderboard, ticketLeaderboard: ticketLeaderboard, leaderboard: gameLeaderboard };
 }
 
 let sessionSecretMemory_=null;

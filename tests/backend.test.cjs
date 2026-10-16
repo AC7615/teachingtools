@@ -29,6 +29,9 @@ const unit6Before=sheets.get('Scores').data.filter(r=>r[4]!=='单元6：度量�
 for(const [difficulty,score] of [['简单',70],['中等',80],['困难',90]]){const r=save({unit:'单元6：度量衡',activity:'配对游戏',difficulty,score});assert.equal(r.unit,'单元6：度量衡');assert(r.saved);}
 assert(save({unit:'单元6：度量衡',activity:'离堂小检核',difficulty:'综合',score:80}).saved);
 save({unit:'单元6：度量衡',activity:'配对游戏',difficulty:'简单',score:100},'3');
-const measureBoard=call('leaderboard',{unit:'单元6：度量衡',sessionToken:login.sessionToken});assert.equal(measureBoard.unit,'单元6：度量衡');assert.equal(measureBoard.gameLeaderboard.length,1);assert.equal(measureBoard.gameLeaderboard[0].score,83);assert.equal(measureBoard.ticketLeaderboard[0].score,80);assert.equal(save({unit:'单元6：度量衡',activity:'配对游戏',difficulty:'简单',score:50}).saved,false);
+const measureBoard=call('leaderboard',{unit:'单元6：度量衡',sessionToken:login.sessionToken});assert.equal(measureBoard.unit,'单元6：度量衡');assert.equal(measureBoard.gameLeaderboard.length,0);assert.equal(measureBoard.ticketLeaderboard[0].score,80);assert.equal(save({unit:'单元6：度量衡',activity:'配对游戏',difficulty:'简单',score:50}).saved,false);
 assert.deepEqual(sheets.get('Scores').data.filter(r=>r[4]!=='单元6：度量衡'),unit6Before);
 console.log('PASS: Unit 6 isolated scores, weighted ranking, class filtering, highest score preservation and unchanged existing units.');
+for(const [difficulty,score] of [['简单',340],['中等',580],['困难',960]]){const r=save({unit:'单元6：度量衡',activity:'叠塔挑战',difficulty,score});assert.equal(r.score,score);}
+const towerBoard=call('leaderboard',{unit:'单元6：度量衡',sessionToken:login.sessionToken});assert.equal(towerBoard.scoreType,'height');assert.equal(towerBoard.gameLeaderboard.length,1);assert.equal(towerBoard.gameLeaderboard[0].score,960);assert.equal(towerBoard.gameLeaderboard[0].easy,340);assert.equal(towerBoard.ticketLeaderboard[0].score,80);assert.equal(save({unit:'单元6：度量衡',activity:'叠塔挑战',difficulty:'简单',score:200}).saved,false);assert.equal(save({unit:'单元3：分数',activity:'配对游戏',difficulty:'简单',score:400}).score,100);
+console.log('PASS: uncapped unit-six tower height is isolated from older percentage scores and exit checks.');
