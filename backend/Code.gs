@@ -95,7 +95,7 @@ function getLegacyScoresSheet_() {
 
 /** GET 只提供健康检查，不公开名单、姓名或排行榜。 */
 function doGet() {
-  return jsonOutput({ ok: true, service: 'year1-math-score-api', version: 5, units:['单元3：分数','单元4：纸币和硬币','单元4：经济来源和储蓄','单元5：时间与时刻','单元7：空间'] });
+  return jsonOutput({ ok: true, service: 'year1-math-score-api', version: 6, units:['单元3：分数','单元4：纸币和硬币','单元4：经济来源和储蓄','单元5：时间与时刻','单元6：度量衡','单元7：空间'] });
 }
 
 function doPost(e) {
@@ -404,7 +404,7 @@ function getSessionSecret_() {
   return secret;
 }
 function normalizeClassCode_(value) { return String(value || '').trim().toUpperCase().replace(/\s+/g, ''); }
-function normalizeUnit_(value) { if(['单元7：空间','单元7：空间硬币闯关'].indexOf(String(value))>=0)return '单元7：空间';return safeChoice_(value,['单元3：分数','单元4：钱币','单元4：纸币和硬币','单元4：经济来源和储蓄','单元5：时间与时刻'],'单元3：分数'); }
+function normalizeUnit_(value) { if(['单元7：空间','单元7：空间硬币闯关'].indexOf(String(value))>=0)return '单元7：空间';return safeChoice_(value,['单元3：分数','单元4：钱币','单元4：纸币和硬币','单元4：经济来源和储蓄','单元5：时间与时刻','单元6：度量衡'],'单元3：分数'); }
 function hashClassCode_(code) { return sign_('class-code:' + normalizeClassCode_(code)); }
 function hashTeacherPassword_(password) { return sign_('teacher-password:' + String(password || '')); }
 function sign_(value) { return Utilities.base64EncodeWebSafe(Utilities.computeHmacSha256Signature(String(value), getSessionSecret_())).replace(/=+$/g, ''); }

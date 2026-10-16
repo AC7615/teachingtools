@@ -25,3 +25,10 @@ const timeDashboard=ctx.getTeacherDashboard_();assert.equal(timeDashboard.studen
 assert.deepEqual(sheets.get('Scores').data.filter(r=>r[4]==='单元3：分数'),legacyBeforeTime);
 console.log('PASS: Unit 5 saves, weighted ranking, class isolation, highest scores, teacher overview and preserved existing scores.');
 const rosterCache=new Map();let rosterReads=0,cacheTtl=null;ctx.CacheService={getScriptCache:()=>({get:k=>rosterCache.get(k),put:(k,v,ttl)=>{rosterCache.set(k,v);cacheTtl=ttl;}})};const studentsSheet=sheets.get('Students'),originalRange=studentsSheet.getRange.bind(studentsSheet);studentsSheet.getRange=(...args)=>{rosterReads++;return originalRange(...args)};ctx.rosterRows_();ctx.rosterRows_();assert.equal(rosterReads,1);assert.equal(cacheTtl,60);rosterCache.clear();ctx.rosterRows_();assert.equal(rosterReads,2);console.log('PASS: roster cache avoids repeated Sheet reads and refreshes after expiry.');
+const unit6Before=sheets.get('Scores').data.filter(r=>r[4]!=='单元6：度量衡').map(r=>r.slice());
+for(const [difficulty,score] of [['简单',70],['中等',80],['困难',90]]){const r=save({unit:'单元6：度量衡',activity:'配对游戏',difficulty,score});assert.equal(r.unit,'单元6：度量衡');assert(r.saved);}
+assert(save({unit:'单元6：度量衡',activity:'离堂小检核',difficulty:'综合',score:80}).saved);
+save({unit:'单元6：度量衡',activity:'配对游戏',difficulty:'简单',score:100},'3');
+const measureBoard=call('leaderboard',{unit:'单元6：度量衡',sessionToken:login.sessionToken});assert.equal(measureBoard.unit,'单元6：度量衡');assert.equal(measureBoard.gameLeaderboard.length,1);assert.equal(measureBoard.gameLeaderboard[0].score,83);assert.equal(measureBoard.ticketLeaderboard[0].score,80);assert.equal(save({unit:'单元6：度量衡',activity:'配对游戏',difficulty:'简单',score:50}).saved,false);
+assert.deepEqual(sheets.get('Scores').data.filter(r=>r[4]!=='单元6：度量衡'),unit6Before);
+console.log('PASS: Unit 6 isolated scores, weighted ranking, class filtering, highest score preservation and unchanged existing units.');
