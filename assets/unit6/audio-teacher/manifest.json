@@ -2,7 +2,7 @@
   "provider": "local-cosyvoice3",
   "voice": "installed-teacher-instruct",
   "instruction": "You are a helpful assistant. 请用温柔、清晰的小学数学老师语气朗读，普通话标准，语速稍慢，保持自然连贯。数字、数量单位和运算符号要读清楚。题目中的不同条件之间适当停顿，提问前稍作停顿，重点突出问题。避免拖音、夸张表演和过度幼儿化。<|endofprompt|>",
-  "complete": false,
+  "complete": true,
   "available": [
     "cv3-a3d2a1a59e3f54.wav",
     "cv3-ae159d85473004.wav",
@@ -48,7 +48,17 @@
     "cv3-9400805060206e.wav",
     "cv3-f0dd12da34ce27.wav",
     "cv3-51e518bd3bdd0f.wav",
-    "cv3-2bfa6336af9315.wav"
+    "cv3-2bfa6336af9315.wav",
+    "cv3-982fd0717603e7.wav",
+    "cv3-05669e05a96fd0.wav",
+    "cv3-be9d4c06a7cd68.wav",
+    "cv3-fe9b49e1dd4079.wav",
+    "cv3-26244e034eb6c5.wav",
+    "cv3-1f2259d49f8650.wav",
+    "cv3-78fe1e322e88ad.wav",
+    "cv3-ef292bae37a2ab.wav",
+    "cv3-4beb33bb787f01.wav",
+    "cv3-901d4e0b5c66ac.wav"
   ],
   "clips": {
     "长。上面的铅笔长，下面的铅笔短。": "cv3-a3d2a1a59e3f54.wav",

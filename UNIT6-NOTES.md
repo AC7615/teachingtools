@@ -18,4 +18,4 @@
 验证：node --test tests/measurement*.test.cjs tests/backend.test.cjs tests/teacher.test.cjs tests/time-records.test.cjs。
 浏览器复核：单一外侧箭头；单工具锁定/清空；液体满杯与碗形；对应题图；三种地图和方块；三连对技能、落块、结算；10题检核；AI音频播放。
 
-阶段发布：2026-10-16 应用户要求先上线可用游戏与闪卡，19段闪卡、16道容易题及10道中等题朗读已就绪，共45段；困难的10道题朗读继续合成。manifest.available 标记已就绪文件，未就绪按钮显示准备提示，不请求缺失的音频。
+全量语音发布包：19段闪卡与36道题的朗读已全部生成，共55段，已通过格式、音量、时长及网页播放检查。manifest.complete 为 true；所有朗读按钮均有对应音频。数量表达中的“2小杯／2大杯”朗读为“两小杯／两大杯”。
