@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f9f5ea"><title>度量衡小乐园 · 一年级闪卡</title><link rel="stylesheet" href="unit6-measurement.css"></head>
+<body>
+<header><a class="brand" href="../index.html"><span class="brand-icon">✿</span> 返回数学目录</a><span class="year">一年级 · 单元六</span><button id="fullscreen" class="quiet">⛶ 全屏上课</button></header>
+<main>
+<div class="intro"><span class="eyebrow">看一看 · 想一想 · 说一说</span><h1>大小世界，<span>我会说！</span></h1><p>仔细看图片，大声说出答案，再翻卡看看吧。</p></div>
+<nav id="filters" aria-label="选择学习内容"></nav>
+<section class="learning" aria-label="看图说词闪卡">
+<div class="card-top"><span id="category"></span><span id="counter" aria-live="polite"></span></div>
+<button id="flashcard" class="flashcard" aria-label="翻卡查看答案"><div id="art" role="img"></div><div class="question"><span id="stage">看图说一说</span><h2 id="question"></h2><div id="answer" hidden><strong id="word"></strong><p id="sentence"></p></div><span id="hint">轻点卡片，揭晓答案 ↗</span></div></button>
+<div class="controls"><button id="prev" class="arrow" aria-label="上一张">←</button><button id="flip" class="primary">翻卡看答案</button><button id="speak" class="secondary">♫ 听一听</button><button id="next" class="arrow" aria-label="下一张">→</button></div>
+<div class="under"><button id="shuffle" class="quiet">⤨ 打乱顺序</button><span id="learned"></span><button id="know" class="quiet">☆ 我会说了</button></div>
+<div id="dots" class="dots" aria-label="闪卡进度"></div>
+</section>
+<section class="teacher"><span class="tip-icon">☀</span><div><b>一起说完整的话</b><p id="tip"></p></div><button id="reset" class="quiet">重新练习</button></section>
+<footer>小眼睛仔细看，小嘴巴大胆说。<span>← → 切换闪卡 · 空格翻卡</span></footer>
+</main><div id="toast" role="status" aria-live="polite"></div><script src="unit6-measurement.js"></script>
+</body></html>
