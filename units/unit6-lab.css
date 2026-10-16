@@ -10,3 +10,15 @@
 #art{background-image:none!important}.flash-picture{position:absolute;inset:10%;background-repeat:no-repeat}.flash-pointers path{stroke-width:1.6}.target-pointer{animation:none}
 
 .question-scene{max-width:800px;margin:10px auto}.question-scene > svg{display:block;width:100%;height:auto;max-height:420px}.lab-small{line-height:1.7}
+
+@media(min-width:900px){
+ main.app:has(#challenge.active){height:100dvh;display:flex;flex-direction:column;padding:12px 18px}
+ .app:has(#challenge.active) header,.app:has(#challenge.active) .student-status,.app:has(#challenge.active) .tabs{flex-shrink:0}
+ .app:has(#challenge.active) h1{margin:4px 0;font-size:28px}
+ .app:has(#challenge.active) .student-status{margin:6px 0}
+ .app:has(#challenge.active) .tabs{margin:7px 0}
+ #challenge.active{display:flex;flex-direction:column;flex:1;min-height:0}
+ #challenge.active .tower-frame-toolbar{flex-shrink:0;margin:4px 0 8px}
+ #challenge.active #towerOriginalFrame{flex:1;min-height:0;height:100%;width:100%}
+ .app:has(#challenge.active)>footer{display:none}
+}
