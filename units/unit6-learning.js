@@ -3,7 +3,7 @@
  let panel='flash';
  function selectPanel(next){panel=next;document.querySelectorAll('[data-panel]').forEach(b=>{b.classList.toggle('active',b.dataset.panel===next);b.setAttribute('aria-pressed',b.dataset.panel===next)});document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===next));if(next==='measure')Unit6Lab.activate();else Unit6Lab.deactivate();if(next==='leader')Records.leaderboard();Unit6Voice.stop();const frame=$('towerOriginalFrame');frame.contentWindow?.postMessage({type:'measurement-tower-visible',visible:next==='challenge'},location.origin);}
  document.querySelectorAll('[data-panel]').forEach(b=>b.onclick=()=>selectPanel(b.dataset.panel));
- function speak(text){Unit6Voice.play(text);}
+ function speak(text){Unit6Voice.play(text,{rate:.9});}
  function quizMarkup(q,number,total){return `<div class="quiz-head"><span>第 ${number} / ${total} 题</span><button data-read>♫ 读题</button></div><div class="progress"><span style="width:${(number-1)/total*100}%"></span></div><div class="question-scene">${MeasurementScenes.render(q.scene,q.text)}</div><p class="quiz-text">${esc(q.text)}</p><div class="quiz-options">${q.options.map((o,i)=>`<button data-choice="${i}">${esc(o.text)}</button>`).join('')}</div><div class="quiz-feedback" role="status"></div>`;}
  let ticket=null;
  $('startTicket').onclick=()=>{ticket={deck:C.ticket(),index:0,answers:[],started:Date.now(),id:crypto.randomUUID()};$('ticketIntro').hidden=true;$('ticketHost').hidden=false;renderTicket()};

@@ -108,7 +108,7 @@ function render(){
  if(localSession&&!demo){$('syncStatus').textContent=localSession.blocked?'登录已失效':localSession.events.length?'待同步 '+localSession.events.length+' 项':'已同步';$('again').disabled=ended&&!state.saved&&!localSession.blocked;}
  if(ended){$('switchBank').disabled=$('again').disabled;$('switchIdentity').disabled=$('again').disabled;$('resultHeight').innerHTML=state.best+' <small>cm</small>';$('resultReason').textContent=state.reason;$('resultStats').replaceChildren(...[[state.layers.length,'积木数量'],[state.correct+'/'+state.attempts,'答对 / 作答'],[(state.attempts?Math.round(state.correct/state.attempts*100):0)+'%','正确率']].map(([n,label])=>{const p=document.createElement('span'),b=document.createElement('b');b.textContent=n;p.append(b,document.createTextNode(label));return p;}));$('saveStatus').textContent=mathSaveStatus||'挑战结束后记录最高塔高。';}
 }
-$('mathReadQuestion').onclick=()=>{if(state?.question)Unit6Voice.play(state.question.text);};
+$('mathReadQuestion').onclick=()=>{if(state?.question)Unit6Voice.play(state.question.text,{rate:.9});};
 $('questionImage').onerror=()=>{showError('这道题的图片未能载入，请检查题库图片。');};
 function showLoginPanel(open){$('entryChoices').hidden=open;$('loginPanel').hidden=!open;$('showLogin').setAttribute('aria-expanded',String(open));(open?$('studentName'):$('showLogin')).focus();}
 $('showLogin').onclick=()=>showLoginPanel(true);$('backToEntry').onclick=()=>showLoginPanel(false);
