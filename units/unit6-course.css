@@ -3,3 +3,4 @@
 .workbench{overflow-x:auto}.length-world{min-width:560px}#towerCanvas{cursor:ew-resize}
 @media(max-width:700px){.length-world{min-width:460px}.tabs{justify-content:flex-start}#filters{margin-bottom:15px}}
 @media(max-width:500px){.tower-stats{font-size:12px;gap:7px}.tower-stats button{font-size:12px;padding:10px}}
+.dots button{min-height:7px;height:7px}.dots .current{height:7px}
