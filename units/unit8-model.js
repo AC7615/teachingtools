@@ -19,7 +19,7 @@ const U8=(()=>{'use strict';
   fish:'<path d="M9 20L1 11V29Z" fill="#ea9b57"/><ellipse cx="24" cy="20" rx="15" ry="11" fill="#f6b96c"/><circle cx="31" cy="17" r="2.5" fill="#334a4e"/>'
  };return `<svg class="symbol ${cls}" viewBox="0 0 40 42" aria-hidden="true">${paths[kind]||paths.book}</svg>`}
  function chart(d){const t=themes[d.theme],symbol=d.symbol||t.symbol,vertical=d.orientation==='vertical';return `<figure class="chart ${vertical?'vchart':''}" aria-label="${esc(t.title)}，${vertical?'竖式':'横式'}象形统计图"><h3>${esc(d.title||t.title)}</h3><div class="chart-grid" style="--cats:${t.names.length}">${d.counts.map((n,i)=>`<div class="chart-category"><span class="chart-label">${esc(t.names[i])}</span><div class="symbols" role="img" aria-label="${esc(t.names[i])}：${n}个图，${n*d.value}${esc(t.unit)}">${Array.from({length:n},()=>icon(symbol)).join('')||'<span class="zero">0</span>'}</div></div>`).join('')}</div><figcaption>${icon(symbol)} 代表 <b>${d.value}</b> ${esc(t.unit)}</figcaption></figure>`}
- const crop=(page,box,alt)=>`<figure class="textbook"><svg viewBox="${box.join(' ')}" role="img" aria-label="${esc(alt)}"><image href="../assets/unit8/textbook-p${page}.webp" width="863" height="1153"/></svg><figcaption>课本第二册 · 第${page}页</figcaption></figure>`;
+ const crop=(page,box,alt)=>`<figure class="textbook"><svg viewBox="${box.join(' ')}" role="img" aria-label="${esc(alt)}"><image href="/assets/unit8/textbook-p${page}.webp" width="863" height="1153"/></svg><figcaption>课本第二册 · 第${page}页</figcaption></figure>`;
  const shelf=()=>crop(76,[25,228,812,335],'课本中的图书：科普读物、童话和漫画');
  const table=()=>crop(80,[144,185,444,336],'投篮记数表：汉文6次，友华8次，洁玲3次');
  const fruitChart=()=>crop(79,[150,64,560,597],'本地水果象形统计图：红毛丹4个爱心，芒果5个，木瓜2个，香蕉4个；每个爱心代表2人');
