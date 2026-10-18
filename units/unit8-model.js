@@ -18,36 +18,39 @@ const U8=(()=>{'use strict';
   apple:'<path d="M20 13C3 2-3 30 11 36Q20 32 29 36C43 30 37 2 20 13" fill="#ef806a" stroke="#c25c4c" stroke-width="2"/><path d="M20 12V4Q31 0 29 7Q25 11 20 8" fill="#7baf69" stroke="#659253" stroke-width="2"/>',
   fish:'<path d="M9 20L1 11V29Z" fill="#ea9b57"/><ellipse cx="24" cy="20" rx="15" ry="11" fill="#f6b96c"/><circle cx="31" cy="17" r="2.5" fill="#334a4e"/>'
  };return `<svg class="symbol ${cls}" viewBox="0 0 40 42" aria-hidden="true">${paths[kind]||paths.book}</svg>`}
- function chart(d){const t=themes[d.theme],symbol=d.symbol||t.symbol,vertical=d.orientation==='vertical';return `<figure class="chart ${vertical?'vchart':''}" aria-label="${esc(t.title)}，${vertical?'竖式':'横式'}象形统计图"><h3>${esc(d.title||t.title)}</h3><div class="chart-grid" style="--cats:${t.names.length}">${d.counts.map((n,i)=>`<div class="chart-category"><span class="chart-label">${esc(t.names[i])}</span><div class="symbols" role="img" aria-label="${esc(t.names[i])}：${n}个图，${n*d.value}${esc(t.unit)}">${Array.from({length:n},()=>icon(symbol)).join('')||'<span class="zero">0</span>'}</div></div>`).join('')}</div><figcaption>${icon(symbol)} 代表 <b>${d.value}</b> ${esc(t.unit)}</figcaption></figure>`}
+ function chart(d){const t=themes[d.theme],symbol=d.symbol||t.symbol,vertical=d.orientation==='vertical';return `<figure style="--max-count:${Math.max(1,...d.counts)}" class="chart ${vertical?'vchart':''}" aria-label="${esc(t.title)}，${vertical?'竖式':'横式'}象形统计图"><h3>${esc(d.title||t.title)}</h3><div class="chart-grid" style="--cats:${t.names.length}">${d.counts.map((n,i)=>`<div class="chart-category"><span class="chart-label">${esc(t.names[i])}</span><div class="symbols" role="img" aria-label="${esc(t.names[i])}：${n}个图，${n*d.value}${esc(t.unit)}">${Array.from({length:n},()=>icon(symbol)).join('')||'<span class="zero">0</span>'}</div></div>`).join('')}</div><figcaption>${icon(symbol)} 代表 <b>${d.value}</b> ${esc(t.unit)}</figcaption></figure>`}
  const crop=(page,box,alt)=>`<figure class="textbook"><svg viewBox="${box.join(' ')}" role="img" aria-label="${esc(alt)}"><image href="/assets/unit8/textbook-p${page}.webp" width="863" height="1153"/></svg><figcaption>课本第二册 · 第${page}页</figcaption></figure>`;
  const shelf=()=>crop(76,[25,228,812,335],'课本中的图书：科普读物、童话和漫画');
  const table=()=>crop(80,[144,185,444,336],'投篮记数表：汉文6次，友华8次，洁玲3次');
  const fruitChart=()=>crop(79,[150,64,560,597],'本地水果象形统计图：红毛丹4个爱心，芒果5个，木瓜2个，香蕉4个；每个爱心代表2人');
  const books=()=>crop(78,[145,278,564,400],'借阅图书象形统计图：科普读物5本，童话6本，漫画3本');
- const cards=[
-  ['数据','shù jù','图书的种类和数量，都是我们收集到的数据。',shelf],
-  ['收集','shōu jí','看一看同学借了哪些图书，把资料记录下来。',shelf],
-  ['分类','fēn lèi','按种类，把图书分成科普读物、童话和漫画。',shelf],
-  ['整理','zhěng lǐ','分好类，数好数量，再用统计表展示。',()=>crop(77,[350,80,462,301],'整理好的借阅图书统计表，使用四竖一斜记数')],
-  ['记数符号','jì shù fú hào','两种方法都是一笔记1个，每5笔组成一组。',()=>`<div class="tally-pair"><div><h3>“正”字记数</h3>${tally(7)}<p>5＋2＝7</p></div><div><h3>四竖一斜</h3>${tally(7,'strokes')}<p>5＋2＝7</p></div></div>`],
-  ['统计表','tǒng jì biǎo','用表格记录每个人投进篮的次数。',table],
-  ['象形统计图','xiàng xíng tǒng jì tú','用图片或符号表示数量，这幅图用一本书的图片代表1本书。',books],
-  ['代表','dài biǎo','这里一个爱心代表2人。4个爱心代表8人。',fruitChart],
-  ['横式','héng shì','同一类的图片横着排，一行表示一类。',books],
-  ['竖式','shù shì','同一类的图片竖着排，一列表示一类。',fruitChart],
-  ['最多','zuì duō','芒果有5个爱心，代表10人，喜欢芒果的人最多。',fruitChart],
-  ['最少','zuì shǎo','木瓜有2个爱心，代表4人，喜欢木瓜的人最少。',fruitChart],
-  ['同样多／相同','tóng yàng duō / xiāng tóng','红毛丹和香蕉都是4个爱心，代表的人数同样多。',fruitChart],
-  ['一共／共有／总数','yí gòng / gòng yǒu / zǒng shù','把三类图书加起来：5＋6＋3＝14，一共借出14本书。',books],
-  ['相差／多多少／少多少','xiāng chà / duō duō shǎo / shǎo duō shǎo','友华投进8次，汉文投进6次。8－6＝2，两人相差2次。',table],
-  ['增加','zēng jiā','增加就是数量变多。课本让我们想一想：多2人喜欢炒面后会怎样？',()=>crop(83,[138,158,586,529],'喜欢食物的统计图：炒面3人、炒饭5人、椰浆饭4人、汤米粉2人')],
-  ['减少','jiǎn shǎo','减少就是数量变少。如果借出的6本童话归还2本，还借出4本。',books],
-  ['各／每','gè / měi','“各有多少”要分别点算；“每个图代表多少”要先看图例。',books],
-  ['受访','shòu fǎng','受访的同学，就是回答调查问题的同学。每人只选一种最喜欢的水果。',fruitChart]
+
+ function vocabularyPicture(index){const first=index<9,cols=first?3:2,rows=first?3:5,i=first?index:index-9,width=first?1254:1086,height=first?1254:1448,cw=width/cols,ch=height/rows,edges=first?[0,398,794,1254]:[0,290,548,839,1118,1448],row=Math.floor(i/cols),fx=i%cols*cw+5,fy=edges[row]+7,fw=cw-10,fh=edges[row+1]-edges[row]-14;let overlay='';if(index===4)overlay='<div class="vocab-tallies"><div>'+tally(7)+'</div><div>'+tally(7,'strokes')+'</div></div>';if(index===5)overlay='<div class="vocab-board-table"><table><tbody><tr><th>图书</th><th>本数</th></tr><tr><td>童话</td><td>3</td></tr><tr><td>科普</td><td>2</td></tr></tbody></table></div>';if(index===6)overlay='<div class="vocab-board-chart"><div>'+icon('book')+icon('book')+icon('book')+'</div><div>'+icon('book')+icon('book')+'</div></div>';const extras={7:icon('heart')+' 代表 2 人',8:icon('book')+icon('book')+icon('book')+' 横着排',9:'<span class="vertical-books">'+icon('book')+icon('book')+icon('book')+'</span> 竖着排',12:'4＝4，同样多',13:'把各组数量合起来',14:'4－3＝1，相差1个',15:'2＋1＝3，增加1个',16:'3－1＝2，减少1个',17:'每人1本书'};return '<div class="vocab-visual" data-picture="'+index+'"><svg class="vocab-image" viewBox="'+fx+' '+fy+' '+fw+' '+fh+'" role="img" aria-label="'+vocabularyText[index][0]+'的情境插图"><image href="/assets/unit8/'+(first?'vocabulary-a-v3.webp':'vocabulary-b-v3.webp')+'" width="'+width+'" height="'+height+'"/></svg>'+overlay+'</div>'+(extras[index]?'<div class="vocab-example">'+extras[index]+'</div>':'')}
+ const vocabularyText=[
+ ['数据','shù jù','收集到的种类、数量等资料，就是数据。'],
+ ['收集','shōu jí','问一问同学喜欢的水果，把回答记录下来。'],
+ ['分类','fēn lèi','按照同一个标准，把同类图书放在一起。'],
+ ['整理','zhěng lǐ','分好类，再把图书整齐排列，方便点算。'],
+ ['记数符号','jì shù fú hào','一笔记1个，每5笔成一组。“正”字和四竖一斜都能表示数量。'],
+ ['统计表','tǒng jì biǎo','把种类和数量填进表格，方便查看。'],
+ ['象形统计图','xiàng xíng tǒng jì tú','用图片或符号表示每一类的数量。'],
+ ['代表','dài biǎo','一个爱心代表2人，就要按2、4、6这样点算。'],
+ ['横式','héng shì','同一类的图片横着排列，一行表示一类。'],
+ ['竖式','shù shì','同一类的图片竖着排列，一列表示一类。'],
+ ['最多','zuì duō','比较各组数量，数量最大的一组就是最多。'],
+ ['最少','zuì shǎo','中间篮子只有1个苹果，是最少的。'],
+ ['同样多／相同','tóng yàng duō / xiāng tóng','两篮各有4个苹果，数量同样多。'],
+ ['一共／共有／总数','yí gòng / gòng yǒu / zǒng shù','把题目指定的各组数量加起来，得到总数。'],
+ ['相差／多多少／少多少','xiāng chà / duō duō shǎo / shǎo duō shǎo','4个比3个多1个，两个数量相差1个。'],
+ ['增加','zēng jiā','原来2个苹果，再放入1个，数量增加到3个。'],
+ ['减少','jiǎn shǎo','原来3个苹果，拿走1个，数量减少到2个。'],
+ ['各／每','gè / měi','每人各拿1本书。问“各有多少”时，要分别记录。'],
+ ['受访','shòu fǎng','回答调查问题的人，就是受访的人。']
  ];
+ const cards=vocabularyText.map((c,i)=>[...c,()=>vocabularyPicture(i)]);
  function makeQuestion(kind,seed=0){const keys=['book','fruit','food','vote'],theme=keys[seed%4],t=themes[theme],base=1+seed%3,counts=t.names.map((_,i)=>base+(i===0?2:i===1?0:1));if(counts.length===4)counts[3]=base+1;if(kind==='same'){counts[2]=counts[0];if(counts.length===4)counts[3]=base+1}const value=kind==='legend'?5:kind==='scaled'?2:1,d={theme,counts,value,orientation:seed%2?'vertical':'horizontal'},v=counts.map(n=>n*value),sum=v.reduce((a,b)=>a+b,0);let text,answer,options,explanation,art=chart(d);
   const numeric=n=>{answer=String(n);options=shuffle([...new Set([n,Math.max(0,n-1),n+1,n+2])]).map(String)};
-  if(kind==='sort'){text='整理图书时，怎样分类才正确？';answer='同一种类放在一起';options=[answer,'随意混在一起','只记录喜欢的图书'];explanation='用同一个标准分类，再点算每一类。';art=shelf()}
+  if(kind==='sort'){text='整理图书时，怎样分类才正确？';answer='同一种类放在一起';options=[answer,'随意混在一起','只记录喜欢的图书'];explanation='用同一个标准分类，再点算每一类。';art=vocabularyPicture(2)}
   else if(kind==='tally'){const n=6+seed%5,style=seed%2?'strokes':'zheng';text='这些记数符号表示多少个？';numeric(n);explanation=`每5笔是一组，5＋${n-5}＝${n}。`;art=`<div class="question-tally"><h3>${style==='zheng'?'“正”字记数':'四竖一斜'}</h3>${tally(n,style)}</div>`}
   else if(kind==='max'||kind==='min'){const isMax=kind==='max',num=isMax?Math.max(...v):Math.min(...v);text=`哪一类的数量${isMax?'最多':'最少'}？`;answer=t.names[v.indexOf(num)];options=[...t.names];explanation=`${answer}有${num}${t.unit}，数量${isMax?'最多':'最少'}。`}
   else if(kind==='same'){text='哪两类的数量相同？';answer=t.names[0]+'和'+t.names[2];options=[answer,t.names[0]+'和'+t.names[1],t.names[1]+'和'+t.names[2]];explanation=`${t.names[0]}和${t.names[2]}都是${v[0]}${t.unit}。`}

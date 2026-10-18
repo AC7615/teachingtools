@@ -14,3 +14,5 @@ const s=M.createSort([2,1,1]),f=s.items.find(x=>x.type===0);assert(!M.drop(s,f.i
 assert(M.validateWorkshop({values:[5,6,3],placed:[5,6,3],value:1}).correct);assert(!M.validateWorkshop({values:[5,6,3],placed:[5,5,3],value:1}).correct);assert(!M.validateWorkshop({values:[5,6,3],placed:[0,0,0],value:2}).valid);assert(M.validateWorkshop({values:[8,10,4,8],placed:[4,5,2,4],value:2}).correct);
 assert(!M.cards.some(c=>c[0]==='标题'||c[0]==='图例'));assert.equal(M.cards.length,19);assert(new Set(Object.values(M.themes).map(t=>t.symbol)).size>=4);
 console.log('PASS:',checked,'questions; both tally methods; correct/wrong/repeated drops; manual marks; workshop validation; textbook vocabulary and varied pictograms.');
+
+const illustrations=M.cards.map(c=>c[3]());assert(illustrations.every(html=>html.includes('vocab-image')&&!html.includes('textbook-p')));assert.equal(new Set(illustrations.map(html=>html.match(/data-picture="(\d+)"/)[1])).size,19);console.log('PASS: every vocabulary card has its own matched illustration, without textbook screenshots.');
