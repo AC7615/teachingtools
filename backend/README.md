@@ -28,3 +28,6 @@ setupUnit7 只建立缺少的单元7工作表，重复执行不会清空成绩�
 练习不上传；公开模式不上传；班级登录后挑战及检核才保存。网络失败的成绩按学生暂存，可以重试。
 新增检查：node tests/time.test.cjs、node tests/time-game.test.cjs、node tests/time-records.test.cjs、node tests/overall.test.cjs。
 2026-10-13：现有部署更新到版本13。名单读取使用60秒 Script Cache；签名密钥在单次脚本执行内复用，减少班级/姓名查询中的重复表格和属性读取。学生登录仍通过签名选择凭证，成绩记录接口地址不变。
+
+## 单元8更新（2026-10-19）
+原部署更新为版本16，API version=8。单元8：数据处理的问答挑战和离堂小检核使用既有Scores表，各难度最高百分制成绩，挑战排行榜按20%/30%/50%加权；教师接口提供dataEasy/Medium/Hard/Ticket、dataGameLeaderboard、dataTicketLeaderboard及unitStats.unit8。未清空或迁移原单元数据。

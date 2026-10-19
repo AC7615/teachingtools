@@ -35,3 +35,12 @@ console.log('PASS: Unit 6 isolated scores, weighted ranking, class filtering, hi
 for(const [difficulty,score] of [['简单',340],['中等',580],['困难',960]]){const r=save({unit:'单元6：度量衡',activity:'叠塔挑战',difficulty,score});assert.equal(r.score,score);}
 const towerBoard=call('leaderboard',{unit:'单元6：度量衡',sessionToken:login.sessionToken});assert.equal(towerBoard.scoreType,'height');assert.equal(towerBoard.gameLeaderboard.length,1);assert.equal(towerBoard.gameLeaderboard[0].score,960);assert.equal(towerBoard.gameLeaderboard[0].easy,340);assert.equal(towerBoard.ticketLeaderboard[0].score,80);assert.equal(save({unit:'单元6：度量衡',activity:'叠塔挑战',difficulty:'简单',score:200}).saved,false);assert.equal(save({unit:'单元3：分数',activity:'配对游戏',difficulty:'简单',score:400}).score,100);
 console.log('PASS: uncapped unit-six tower height is isolated from older percentage scores and exit checks.');
+const unit8Before=sheets.get('Scores').data.filter(r=>r[4]!=='单元8：数据处理').map(r=>r.slice());
+for(const [difficulty,score] of [['简单',75],['中等',88],['困难',100]]){const r=save({unit:'单元8：数据处理',activity:'问答挑战',difficulty,score});assert(r.saved);assert.equal(r.unit,'单元8：数据处理')}
+assert.equal(save({unit:'单元8：数据处理',activity:'问答挑战',difficulty:'简单',score:50}).saved,false);
+assert(save({unit:'单元8：数据处理',activity:'离堂小检核',score:90}).saved);
+save({unit:'单元8：数据处理',activity:'问答挑战',difficulty:'简单',score:100},'3');
+const dataBoard=call('leaderboard',{unit:'单元8：数据处理',sessionToken:login.sessionToken});assert.equal(dataBoard.unit,'单元8：数据处理');assert.equal(dataBoard.gameLeaderboard.length,1);assert.equal(dataBoard.gameLeaderboard[0].score,91);assert.equal(dataBoard.gameLeaderboard[0].medium,88);assert.equal(dataBoard.ticketLeaderboard[0].score,90);
+const dataDashboard=ctx.getTeacherDashboard_();assert.equal(dataDashboard.students[0].dataHard.score,100);assert.equal(dataDashboard.students[0].dataTicket.score,90);assert.equal(dataDashboard.unitStats.unit8.easyCompleted,2);assert.equal(dataDashboard.dataGameLeaderboard[0].score,91);assert.equal(dataDashboard.dataTicketLeaderboard[0].score,90);
+assert.deepEqual(sheets.get('Scores').data.filter(r=>r[4]!=='单元8：数据处理'),unit8Before);assert(JSON.parse(ctx.doGet().text).units.includes('单元8：数据处理'));
+console.log('PASS: Unit 8 challenge, exit ticket, weighted class ranking, teacher dashboard and preserved older units.');
